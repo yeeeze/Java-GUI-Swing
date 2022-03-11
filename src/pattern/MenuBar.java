@@ -3,20 +3,16 @@ package pattern;
 import javax.swing.*;
 
 public class MenuBar extends JMenuBar{
-    JMenu fileMenu = new JMenu("파일");
-    JMenuItem save = new JMenuItem("저장");
-    JMenuItem open = new JMenuItem("열기");
+    private static final long serialVersionUTD = 1L;
 
-    JMenu editMenu = new JMenu("수정");
-    JMenuItem copy = new JMenuItem("복사");
-    JMenuItem paste = new JMenuItem("붙여넣기");
+    private FileMenu fileMenu;
+    private EditMenu editMenu;
 
     public MenuBar(){
-        fileMenu.add(save);
-        fileMenu.add(open);
-        editMenu.add(copy);
-        editMenu.add(paste);
-        this.add(fileMenu);
-        this.add(editMenu);
+        this.fileMenu = new FileMenu("파일");
+        this.add(this.fileMenu);
+
+        this.editMenu = new EditMenu("Edit");
+        this.add(this.editMenu);
     }
 }
