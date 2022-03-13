@@ -3,11 +3,12 @@ package pattern;
 import javax.swing.*;
 
 public class Buttons {
-    JButton[] toolbuttons = new JButton[5];
+    JButton[] toolbuttons = new JButton[4];
 
     public Buttons() {
-        for(int i=0; i<toolbuttons.length; i++) {
-            toolbuttons[i] = new JButton("버튼"+(i+1));
-        }
+        toolbuttons[0] = new JButton("Rectange");
+        toolbuttons[1] = new JButton("Oval");
+        toolbuttons[2] = new JButton("Line");
+        toolbuttons[3] = new JButton("Polygon");
     }
 }
