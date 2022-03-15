@@ -12,15 +12,16 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         this.setSize(400,600);
+        this.setLayout(new FlowLayout());
 
         this.menuBar = new MenuBar();
         this.setJMenuBar(this.menuBar);
 
         this.toolBar = new ToolBar();
-        this.add(this.toolBar, BorderLayout.NORTH);
+        this.add(this.toolBar);
 
         this.drawingPanel = new DrawingPanel();
-        this.add(this.drawingPanel, BorderLayout.CENTER);
+        this.add(this.drawingPanel);
 
         setTitle("my window");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

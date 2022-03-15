@@ -5,15 +5,36 @@ import javax.swing.*;
 public class EditMenu extends JMenu {
     private static final long serialVersionUTD = 1L;
 
-    private EditMenuItems editMenuItems;
+    private JMenuItem undoItem;
+    private JMenuItem redoItem;
+    private JMenuItem cutItem;
+    private JMenuItem copyItem;
+    private JMenuItem pasteItem;
+    private JMenuItem groupItem;
+    private JMenuItem ungroupItem;
 
     public EditMenu(String s) {
         super(s);
 
-        this.editMenuItems = new EditMenuItems();
+        this.undoItem = new JMenuItem("undo");
+        this.add(this.undoItem);
 
-        for(JMenuItem items : this.editMenuItems.getInstance()) {
-            this.add(items);
+        this.redoItem = new JMenuItem("redo");
+        this.add(this.redoItem);
+
+        this.cutItem = new JMenuItem("cut");
+        this.add(this.cutItem);
+
+        this.copyItem = new JMenuItem("copy");
+        this.add(this.copyItem);
+
+        this.pasteItem = new JMenuItem("paste");
+        this.add(this.pasteItem);
+
+        this.groupItem = new JMenuItem("group");
+        this.add(this.groupItem);
+
+        this.ungroupItem = new JMenuItem("ungroup");
+        this.add(this.ungroupItem);
         }
     }
-}
