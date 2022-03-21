@@ -27,37 +27,51 @@ public class DrawingPanel extends JPanel{
     private class MouseHandler implements MouseInputListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-
+            String[] eNameArr = e.paramString().split(",");
+            System.out.println(eNameArr[0]);
+            System.out.println("x좌표 : " + e.getX() + ", y좌표 : " +e.getY());
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-
+            String[] eNameArr = e.paramString().split(",");
+            System.out.println(eNameArr[0]);
+            System.out.println("x좌표 : " + e.getX() + ", y좌표 : " +e.getY());
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-
+            String[] eNameArr = e.paramString().split(",");
+            System.out.println(eNameArr[0]);
+            System.out.println("x좌표 : " + e.getX() + ", y좌표 : " +e.getY());
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
-
+            String[] eNameArr = e.paramString().split(",");
+            System.out.println(eNameArr[0]);
+            System.out.println("x좌표 : " + e.getX() + ", y좌표 : " +e.getY());
         }
 
         @Override
         public void mouseMoved(MouseEvent e) {
-
+            String[] eNameArr = e.paramString().split(",");
+            System.out.println(eNameArr[0]);
+            System.out.println("x좌표 : " + e.getX() + ", y좌표 : " +e.getY());
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
-
+            String[] eNameArr = e.paramString().split(",");
+            System.out.println(eNameArr[0]);
+            System.out.println("x좌표 : " + e.getX() + ", y좌표 : " +e.getY());
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-
+            String[] eNameArr = e.paramString().split(",");
+            System.out.println(eNameArr[0]);
+            System.out.println("x좌표 : " + e.getX() + ", y좌표 : " +e.getY());
         }
     }
 }
