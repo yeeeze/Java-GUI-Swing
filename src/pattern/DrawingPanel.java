@@ -31,11 +31,15 @@ public class DrawingPanel extends JPanel{
     }
 
     private void keepDrawing(int x, int y) {
+        Graphics g = this.getGraphics();    // 패널이 가지고 있는 그래픽스를 가져옴
+
         // erase (배경색을 다시 그린다)
-        this.rectangle.draw(this.getGraphics());
+        g.setColor(Color.white);
+        this.rectangle.draw(g);
         // draw (그림을 그리는 역할은?? : 그래픽스!)
         this.rectangle.resize(x, y);
-        this.rectangle.draw(this.getGraphics()); // 패널이 가지고 있는 그래픽스를 가져옴
+        g.setColor(Color.black);
+        this.rectangle.draw(g);
     }
 
     private void finishDrawing(int x, int y) {
@@ -57,7 +61,7 @@ public class DrawingPanel extends JPanel{
         }
 
         public void draw(Graphics graphics) {
-            graphics.drawRect(this.x, this.y, width, height);
+            graphics.drawRect(this.x, this.y, this.width, this.height);
         }
     }
 
