@@ -6,6 +6,13 @@ import java.awt.event.*;
 
 public class DrawingPanel extends JPanel{
     private static final long serialVersionUTD = 1L;
+    public enum EShapes {
+        eRectangle,
+        eOval,
+        eLine,
+        ePolygon
+    }
+    public EShapes eShapes;
 
     public DrawingPanel() {
         this.setBackground(Color.white);
@@ -24,20 +31,20 @@ public class DrawingPanel extends JPanel{
         super.paint(graphics);
     }
 
-    Rectangle rectangle;
-    Oval oval;
-    Line line;
+    Shape shape;
 
     private void prepareDrawing(int x, int y) {
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
         graphics2D.setXORMode(this.getBackground());
 
-        this.rectangle = new Rectangle(x, y);
-        this.rectangle.draw(graphics2D);
-        this.oval = new Oval(x, y);
-        this.oval.draw(graphics2D);
-        this.line = new Line(x, y);
-        this.line.draw(graphics2D);
+        if(eShapes == EShapes.eRectangle) {
+            this.shape = new Rectangle(x, y);
+        } else if(eShapes == EShapes.eOval) {
+            this.shape = new Oval(x, y);
+        } else if(eShapes == EShapes.eLine) {
+            this.shape = new Line(x, y);
+        }
+        this.shape.draw(graphics2D);
     }
 
     private void keepDrawing(int x, int y) {
@@ -45,23 +52,21 @@ public class DrawingPanel extends JPanel{
         graphics2D.setXORMode(this.getBackground());
 
         // erase (배경색을 다시 그린다)
-        this.rectangle.draw(graphics2D);
-        this.oval.draw(graphics2D);
-        this.line.draw(graphics2D);
+        this.shape.draw(graphics2D);
 
         // draw (그림을 그리는 역할은?? : 그래픽스!)
-        this.rectangle.resize(x, y);
-        this.oval.resize(x, y);
-        this.line.resize(x, y);
-        this.rectangle.draw(graphics2D);
-        this.oval.draw(graphics2D);
-        this.line.draw(graphics2D);
+        this.shape.resize(x, y);
+        this.shape.draw(graphics2D);
     }
 
     private void finishDrawing(int x, int y) {
     }
 
-    private class Rectangle {
+    abstract private class Shape {
+        abstract public void resize(int x, int y);
+        abstract public void draw(Graphics2D graphics2D);
+    }
+    private class Rectangle extends Shape{
         private int x, y, width, height;
 
         public Rectangle(int x, int y) {
@@ -81,7 +86,7 @@ public class DrawingPanel extends JPanel{
         }
     }
 
-    private class Oval {
+    private class Oval extends Shape{
         private int x, y, width, height;
 
         public Oval(int x, int y) {
@@ -101,7 +106,7 @@ public class DrawingPanel extends JPanel{
         }
     }
 
-    private class Line {
+    private class Line extends Shape{
         private int x1, y1, x2, y2;
 
         public Line(int x1, int y1) {
