@@ -29,27 +29,33 @@ public class DrawingPanel extends JPanel{
     Line line;
 
     private void prepareDrawing(int x, int y) {
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        graphics2D.setXORMode(this.getBackground());
+
         this.rectangle = new Rectangle(x, y);
+        this.rectangle.draw(graphics2D);
         this.oval = new Oval(x, y);
+        this.oval.draw(graphics2D);
         this.line = new Line(x, y);
+        this.line.draw(graphics2D);
     }
 
     private void keepDrawing(int x, int y) {
-        Graphics g = this.getGraphics();    // 패널이 가지고 있는 그래픽스를 가져옴
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();    // 패널이 가지고 있는 그래픽스를 가져옴
+        graphics2D.setXORMode(this.getBackground());
 
         // erase (배경색을 다시 그린다)
-        g.setColor(Color.white);
-        this.rectangle.draw(g);
-        this.oval.draw(g);
-        this.line.draw(g);
+        this.rectangle.draw(graphics2D);
+        this.oval.draw(graphics2D);
+        this.line.draw(graphics2D);
+
         // draw (그림을 그리는 역할은?? : 그래픽스!)
         this.rectangle.resize(x, y);
         this.oval.resize(x, y);
         this.line.resize(x, y);
-        g.setColor(Color.black);
-        this.rectangle.draw(g);
-        this.oval.draw(g);
-        this.line.draw(g);
+        this.rectangle.draw(graphics2D);
+        this.oval.draw(graphics2D);
+        this.line.draw(graphics2D);
     }
 
     private void finishDrawing(int x, int y) {
@@ -70,8 +76,8 @@ public class DrawingPanel extends JPanel{
                 this.height = y - this.y;
         }
 
-        public void draw(Graphics graphics) {
-            graphics.drawRect(this.x, this.y, this.width, this.height);
+        public void draw(Graphics2D graphics2D) {
+            graphics2D.drawRect(this.x, this.y, this.width, this.height);
         }
     }
 
@@ -90,8 +96,8 @@ public class DrawingPanel extends JPanel{
             this.height = y - this.y;
         }
 
-        public void draw(Graphics graphics) {
-            graphics.drawOval(this.x, this.y, this.width, this.height);
+        public void draw(Graphics2D graphics2D) {
+            graphics2D.drawOval(this.x, this.y, this.width, this.height);
         }
     }
 
@@ -110,8 +116,8 @@ public class DrawingPanel extends JPanel{
             this.y2 = y2;
         }
 
-        public void draw(Graphics graphics) {
-            graphics.drawLine(this.x1, this.y1, this.x2, this.y2);
+        public void draw(Graphics2D graphics2D) {
+            graphics2D.drawLine(this.x1, this.y1, this.x2, this.y2);
         }
     }
 
