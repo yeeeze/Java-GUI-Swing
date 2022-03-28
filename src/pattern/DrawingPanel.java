@@ -1,6 +1,7 @@
 package pattern;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -13,8 +14,9 @@ public class DrawingPanel extends JPanel{
         ePolygon
     }
     public EShapes eShapes;
+    private ToolBar toolBar;
 
-    public DrawingPanel() {
+    public DrawingPanel(ToolBar toolBar) {
         this.setBackground(Color.white);
 
         MouseHandler mouseHandler = new MouseHandler();
@@ -24,6 +26,8 @@ public class DrawingPanel extends JPanel{
         this.addMouseMotionListener(mouseHandler);
         // wheel
         this.addMouseWheelListener(mouseHandler);
+
+        this.toolBar = toolBar;
     }
 
     @Override
@@ -37,11 +41,13 @@ public class DrawingPanel extends JPanel{
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
         graphics2D.setXORMode(this.getBackground());
 
-        if(eShapes == EShapes.eRectangle) {
+        this.eShapes = toolBar.selectedButton();
+
+        if(this.eShapes == EShapes.eRectangle) {
             this.shape = new Rectangle(x, y);
-        } else if(eShapes == EShapes.eOval) {
+        } else if(this.eShapes == EShapes.eOval) {
             this.shape = new Oval(x, y);
-        } else if(eShapes == EShapes.eLine) {
+        } else if(this.eShapes == EShapes.eLine) {
             this.shape = new Line(x, y);
         }
         this.shape.draw(graphics2D);

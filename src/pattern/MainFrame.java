@@ -2,6 +2,8 @@ package pattern;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class MainFrame extends JFrame {
     private static final long serialVersionUTD = 1L;
@@ -21,7 +23,7 @@ public class MainFrame extends JFrame {
         this.toolBar = new ToolBar();
         this.add(this.toolBar, layoutManager.NORTH);
 
-        this.drawingPanel = new DrawingPanel();
+        this.drawingPanel = new DrawingPanel(toolBar);
         this.add(this.drawingPanel, layoutManager.CENTER);
 
         setTitle("my window");

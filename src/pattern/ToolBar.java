@@ -1,9 +1,11 @@
 package pattern;
 
 import javax.swing.*;
+
+import pattern.DrawingPanel.EShapes;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class ToolBar extends JToolBar implements ActionListener {
     private static final long serialVersionUTD = 1L;
@@ -13,9 +15,10 @@ public class ToolBar extends JToolBar implements ActionListener {
     private JRadioButton lineTool;
     private JRadioButton polygonTool;
     private JButton colorButton;
+    private ButtonGroup buttonGroup;
 
     public ToolBar() {
-        ButtonGroup buttonGroup = new ButtonGroup();
+        this.buttonGroup = new ButtonGroup();
 
         this.rectangleTool = new JRadioButton("rectangle");
         this.add(this.rectangleTool);
@@ -36,6 +39,21 @@ public class ToolBar extends JToolBar implements ActionListener {
         this.colorButton = new JButton("색상 선택");
         this.colorButton.addActionListener(this);
         this.add(colorButton);
+    }
+
+    public EShapes selectedButton() {
+    	if(this.buttonGroup.getSelection().equals(this.rectangleTool.getModel())) {
+            return EShapes.eRectangle;
+        }
+        else if(this.buttonGroup.getSelection().equals(this.ovalTool.getModel())) {
+            return EShapes.eOval;
+        }
+        else if(this.buttonGroup.getSelection().equals(this.lineTool.getModel())) {
+            return EShapes.eLine;
+        }
+        else {
+            return EShapes.ePolygon;
+        }
     }
 
     public void actionPerformed(ActionEvent event) {
