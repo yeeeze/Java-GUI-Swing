@@ -1,4 +1,6 @@
-package pattern;
+package pattern.global;
+
+import pattern.frames.MainFrame;
 
 public class Main {
 

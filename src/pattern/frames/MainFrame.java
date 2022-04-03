@@ -1,9 +1,7 @@
-package pattern;
+package pattern.frames;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class MainFrame extends JFrame {
     private static final long serialVersionUTD = 1L;
@@ -21,11 +19,12 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(this.menuBar);
 
         this.toolBar = new ToolBar();
-        this.add(this.toolBar, layoutManager.NORTH);
+        this.add(this.toolBar, BorderLayout.NORTH);
 
-        this.drawingPanel = new DrawingPanel(toolBar);
-        this.add(this.drawingPanel, layoutManager.CENTER);
+        this.drawingPanel = new DrawingPanel();
+        this.add(this.drawingPanel, BorderLayout.CENTER);
 
+        this.toolBar.associate(this.drawingPanel);
         setTitle("my window");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

@@ -1,4 +1,7 @@
-package pattern;
+package pattern.frames;
+
+import pattern.menus.EditMenu;
+import pattern.menus.FileMenu;
 
 import javax.swing.*;
 
