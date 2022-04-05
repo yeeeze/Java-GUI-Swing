@@ -2,10 +2,10 @@ package pattern.shapes;
 
 import java.awt.Graphics2D;
 
-public class Oval extends Shape{
+public class TRectangle extends TShape {
     private int x, y, width, height;
 
-    public Oval(int x, int y) {
+    public TRectangle(int x, int y) {
         this.x = x;
         this.y = y;
         this.width = 0;
@@ -18,6 +18,6 @@ public class Oval extends Shape{
     }
 
     public void draw(Graphics2D graphics2D) {
-        graphics2D.drawOval(this.x, this.y, this.width, this.height);
+        graphics2D.drawRect(this.x, this.y, this.width, this.height);
     }
 }
