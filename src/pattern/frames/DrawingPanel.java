@@ -56,10 +56,7 @@ public class DrawingPanel extends JPanel{
     private void prepareDrawing(int x, int y) {
             if (this.eSelectedTool == ETools.ePolygon) {
                 this.selectedTool = new TPolygon(x, y);
-                this.eDrawingState = EDrawingState.eNPointDrawing;
             } else {
-                this.eDrawingState = EDrawingState.e2PointDrawing;
-
                 if (this.eSelectedTool == ETools.eRectangle) {
                     this.selectedTool = new TRectangle(x, y);
                 } else if (this.eSelectedTool == ETools.eOval) {
@@ -98,25 +95,19 @@ public class DrawingPanel extends JPanel{
         this.selectedTool.addPoint(x, y);
         ((TPolygon)this.selectedTool).setLine(x, y);
     }
+
     private void finishDrawing(int x, int y) {
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        //graphics2D.setXORMode(this.getBackground());
 
         if(this.eSelectedTool == ETools.ePolygon) {
             this.selectedTool.draw(graphics2D);
             System.out.println("polygon 1개 완성");
         }
-        this.eDrawingState = EDrawingState.eIdle;
     }
 
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(eDrawingState == EDrawingState.eIdle && eSelectedTool == ETools.ePolygon) {
-                System.out.println("polygon 생성");
-                prepareDrawing(e.getX(), e.getY());
-                return;
-            }
             if(e.getButton() == MouseEvent.BUTTON1) {
                 if(e.getClickCount() == 1) {
                     lButtonClick(e);
@@ -127,14 +118,21 @@ public class DrawingPanel extends JPanel{
         }
 
         private void lButtonClick(MouseEvent e) {
-            if(eDrawingState == EDrawingState.eNPointDrawing) {
-                System.out.println("click");
+            if(eDrawingState == EDrawingState.eIdle) {
+                if (eSelectedTool == ETools.ePolygon) {
+                    eDrawingState = EDrawingState.eNPointDrawing;
+                    System.out.println("polygon 생성");
+                    prepareDrawing(e.getX(), e.getY());
+                }
+            } else if(eDrawingState == EDrawingState.eNPointDrawing) {
                 continueDrawing(e.getX(), e.getY());
             }
         }
+
         private void lButtonDoubleClick(MouseEvent e) {
             if(eDrawingState == EDrawingState.eNPointDrawing){
                 finishDrawing(e.getX(), e.getY());
+                eDrawingState = EDrawingState.eIdle;
             }
         }
 
@@ -147,8 +145,11 @@ public class DrawingPanel extends JPanel{
 
         @Override
         public void mousePressed(MouseEvent e) {
-            if(eDrawingState == EDrawingState.eIdle && eSelectedTool != ETools.ePolygon) {
-                prepareDrawing(e.getX(), e.getY());
+            if(eDrawingState == EDrawingState.eIdle) {
+                if (eSelectedTool != ETools.ePolygon) {
+                    eDrawingState = EDrawingState.e2PointDrawing;
+                    prepareDrawing(e.getX(), e.getY());
+                }
             }
         }
 
@@ -163,6 +164,7 @@ public class DrawingPanel extends JPanel{
         public void mouseReleased(MouseEvent e) {
             if(eDrawingState == EDrawingState.e2PointDrawing){
                 finishDrawing(e.getX(), e.getY());
+                eDrawingState = EDrawingState.eIdle;
             }
         }
 
