@@ -135,7 +135,7 @@ public class DrawingPanel extends JPanel{
         @Override
         public void mousePressed(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                if (selectedTool.getClass() == TPolygon.class) {
+                if (selectedTool.getClass() != TPolygon.class) {
                     eDrawingState = EDrawingState.e2PointDrawing;
                     prepareDrawing(e.getX(), e.getY());
                 }
