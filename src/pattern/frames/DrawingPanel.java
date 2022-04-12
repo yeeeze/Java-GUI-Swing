@@ -68,6 +68,7 @@ public class DrawingPanel extends JPanel{
     private void prepareDrawing(int x, int y) {
             Graphics2D graphics2D = (Graphics2D) this.getGraphics();
             graphics2D.setXORMode(this.getBackground());
+            this.selectedTool.start(x, y);
             this.selectedTool.draw(graphics2D);
     }
 
@@ -107,7 +108,7 @@ public class DrawingPanel extends JPanel{
 
         private void lButtonClick(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                if (eSelectedTool == ETools.ePolygon) {
+                if (selectedTool.getClass() == TPolygon.class) {
                     eDrawingState = EDrawingState.eNPointDrawing;
                     System.out.println("polygon 생성");
                     prepareDrawing(e.getX(), e.getY());
@@ -134,7 +135,7 @@ public class DrawingPanel extends JPanel{
         @Override
         public void mousePressed(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                if (eSelectedTool != ETools.ePolygon) {
+                if (selectedTool.getClass() == TPolygon.class) {
                     eDrawingState = EDrawingState.e2PointDrawing;
                     prepareDrawing(e.getX(), e.getY());
                 }

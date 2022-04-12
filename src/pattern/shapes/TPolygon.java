@@ -9,7 +9,10 @@ public class TPolygon extends TShape {
     private int[] yPoints;
     private int nPoints;
 
-    public TPolygon(int x, int y) {
+    public TPolygon() {
+    }
+
+    public void start(int x, int y) {
         this.nPoints = 0;
         this.xPoints = new int[MAX_POINTS];
         this.yPoints = new int[MAX_POINTS];

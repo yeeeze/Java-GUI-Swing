@@ -5,7 +5,10 @@ import java.awt.Graphics2D;
 public class TOval extends TShape {
     private int x, y, width, height;
 
-    public TOval(int x, int y) {
+    public TOval() {
+    }
+
+    public void start(int x, int y) {
         this.x = x;
         this.y = y;
         this.width = 0;
