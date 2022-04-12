@@ -2,10 +2,7 @@ package pattern.frames;
 
 import javax.swing.*;
 
-import pattern.shapes.TLine;
-import pattern.shapes.TOval;
-import pattern.shapes.TPolygon;
-import pattern.shapes.TRectangle;
+import pattern.shapes.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -52,6 +49,21 @@ public class ToolBar extends JToolBar {
     public void associate(DrawingPanel drawingPanel) {
         this.drawingPanel = drawingPanel;
         this.rectangleTool.doClick();
+    }
+
+    public TShape newShape(TShape tShape) {
+        if (tShape.getClass() == TRectangle.class) {
+            return new TRectangle();
+        }
+        if (tShape.getClass() == TOval.class) {
+            return new TOval();
+        }
+        if (tShape.getClass() == TLine.class) {
+            return new TLine();
+        }
+        else {
+            return new TPolygon();
+        }
     }
 
     private class ActionHandler implements ActionListener {

@@ -19,13 +19,13 @@ public class TPolygon extends TShape {
 
         this.addPoint(x, y);
         this.addPoint(x, y);
+
     }
 
     public void addPoint(int x, int y) {
         this.xPoints[this.nPoints] = x;
         this.yPoints[this.nPoints] = y;
         this.nPoints++;
-        System.out.println("nPoints = " + nPoints);
     }
 
     public void resize(int x, int y) {

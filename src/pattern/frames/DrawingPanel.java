@@ -17,6 +17,8 @@ public class DrawingPanel extends JPanel{
 
     // components
     private Vector<TShape> shapes;
+    private ToolBar toolBar;
+    private Graphics2D buff;
 
 //    public enum ETools {
 //        eRectangle,
@@ -34,13 +36,14 @@ public class DrawingPanel extends JPanel{
     private EDrawingState eDrawingState;
     private TShape selectedTool;
 
-    public DrawingPanel() {
+    public DrawingPanel(ToolBar toolBar) {
         // attributes
         this.eDrawingState = EDrawingState.eIdle;
         this.setBackground(Color.white);
 
         //components
         this.shapes = new Vector<TShape>();
+        this.toolBar = toolBar;
 
         MouseHandler mouseHandler = new MouseHandler();
 
@@ -68,6 +71,10 @@ public class DrawingPanel extends JPanel{
     private void prepareDrawing(int x, int y) {
             Graphics2D graphics2D = (Graphics2D) this.getGraphics();
             graphics2D.setXORMode(this.getBackground());
+
+            if((!this.shapes.isEmpty()) && this.selectedTool.getClass() == this.shapes.lastElement().getClass()) {
+                this.selectedTool = toolBar.newShape(this.selectedTool);
+            }
             this.selectedTool.start(x, y);
             this.selectedTool.draw(graphics2D);
     }

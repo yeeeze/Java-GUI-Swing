@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
         this.toolBar = new ToolBar();
         this.add(this.toolBar, BorderLayout.NORTH);
 
-        this.drawingPanel = new DrawingPanel();
+        this.drawingPanel = new DrawingPanel(this.toolBar);
         this.add(this.drawingPanel, BorderLayout.CENTER);
 
         // association (자식과 자식과의 관계)
