@@ -3,6 +3,7 @@ package pattern.frames;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Vector;
 
 import pattern.shapes.TLine;
 import pattern.shapes.TOval;
@@ -11,16 +12,18 @@ import pattern.shapes.TPolygon;
 import pattern.shapes.TShape;
 
 public class DrawingPanel extends JPanel{
+    // attribute
     private static final long serialVersionUTD = 1L;
 
-    public enum ETools {
-        eRectangle,
-        eOval,
-        eLine,
-        ePolygon
-    }
+    // components
+    private Vector<TShape> shapes;
 
-    private ETools eSelectedTool;
+//    public enum ETools {
+//        eRectangle,
+//        eOval,
+//        eLine,
+//        ePolygon
+//    }
 
     private enum EDrawingState {
         eIdle,
@@ -32,10 +35,15 @@ public class DrawingPanel extends JPanel{
     private TShape selectedTool;
 
     public DrawingPanel() {
+        // attributes
         this.eDrawingState = EDrawingState.eIdle;
         this.setBackground(Color.white);
 
+        //components
+        this.shapes = new Vector<TShape>();
+
         MouseHandler mouseHandler = new MouseHandler();
+
         // button
         this.addMouseListener(mouseHandler);
         // position
@@ -44,65 +52,45 @@ public class DrawingPanel extends JPanel{
         this.addMouseWheelListener(mouseHandler);
     }
 
-    public void setSelectedTool(ETools eSelectedTool) {
-        this.eSelectedTool = eSelectedTool;
+    public void setSelectedTool(TShape selectedTool) {
+        this.selectedTool = selectedTool;
     }
 
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
+        // 창 최소화 시켰을 때 지워지는 것을 막기 위해
+        for(TShape shape: this.shapes) {
+            shape.draw((Graphics2D) graphics);
+        }
     }
 
     private void prepareDrawing(int x, int y) {
-            if (this.eSelectedTool == ETools.ePolygon) {
-                this.selectedTool = new TPolygon(x, y);
-            } else {
-                if (this.eSelectedTool == ETools.eRectangle) {
-                    this.selectedTool = new TRectangle(x, y);
-                } else if (this.eSelectedTool == ETools.eOval) {
-                    this.selectedTool = new TOval(x, y);
-                } else if (this.eSelectedTool == ETools.eLine) {
-                    this.selectedTool = new TLine(x, y);
-                }
-
-                Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-                graphics2D.setXORMode(this.getBackground());
-                this.selectedTool.draw(graphics2D);
-            }
+            Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+            graphics2D.setXORMode(this.getBackground());
+            this.selectedTool.draw(graphics2D);
     }
 
     private void keepDrawing(int x, int y) {
             Graphics2D graphics2D = (Graphics2D) this.getGraphics();    // 패널이 가지고 있는 그래픽스를 가져옴
             graphics2D.setXORMode(this.getBackground());
 
-            // polygon은 좌표를 클릭하고 mouse move시 직선을 추가하며 그려나감
-            if(eDrawingState == EDrawingState.eNPointDrawing) {
-                ((TPolygon)this.selectedTool).drawLine(graphics2D);
-                this.selectedTool.resize(x, y);
-                ((TPolygon)this.selectedTool).drawLine(graphics2D);
-            } else {
-                // erase (배경색을 다시 그린다)
-                this.selectedTool.draw(graphics2D);
+            // erase (배경색을 다시 그린다)
+            this.selectedTool.draw(graphics2D);
 
-                // draw (그림을 그리는 역할은?? : 그래픽스!)
-                this.selectedTool.resize(x, y);
-                this.selectedTool.draw(graphics2D);
-            }
+            // draw (그림을 그리는 역할은?? : 그래픽스!)
+            this.selectedTool.resize(x, y);
+            this.selectedTool.draw(graphics2D);
     }
 
     // n개의 점을 그릴 때 사용하는 메소드
     private void continueDrawing(int x, int y) {
         this.selectedTool.addPoint(x, y);
-        ((TPolygon)this.selectedTool).setLine(x, y);
     }
 
     private void finishDrawing(int x, int y) {
-        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-
-        if(this.eSelectedTool == ETools.ePolygon) {
-            this.selectedTool.draw(graphics2D);
-            System.out.println("polygon 1개 완성");
-        }
+        // 그림 저장
+        this.shapes.add(this.selectedTool);
     }
 
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {

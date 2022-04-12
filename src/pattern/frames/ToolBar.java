@@ -2,23 +2,29 @@ package pattern.frames;
 
 import javax.swing.*;
 
-import pattern.frames.DrawingPanel.ETools;
+import pattern.shapes.TLine;
+import pattern.shapes.TOval;
+import pattern.shapes.TPolygon;
+import pattern.shapes.TRectangle;
 
 import java.awt.*;
 import java.awt.event.*;
 
 public class ToolBar extends JToolBar {
+    // attributes
     private static final long serialVersionUTD = 1L;
 
+    // components
     private JRadioButton rectangleTool;
     private JRadioButton ovalTool;
     private JRadioButton lineTool;
     private JRadioButton polygonTool;
-    private JButton colorButton;
 
+    // associations
     private DrawingPanel drawingPanel;
 
     public ToolBar() {
+        // components
         ButtonGroup buttonGroup = new ButtonGroup();
         ActionHandler actionHandler = new ActionHandler();
 
@@ -41,21 +47,11 @@ public class ToolBar extends JToolBar {
         this.polygonTool.addActionListener(actionHandler);
         this.add(this.polygonTool);
         buttonGroup.add(this.polygonTool);
-
-        this.colorButton = new JButton("색상 선택");
-        //this.colorButton.addActionListener(this);
-        this.add(colorButton);
-    }
-
-    public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == colorButton) {
-            JColorChooser colorChooser = new JColorChooser();
-            Color color = JColorChooser.showDialog(null, "색상 고르기", Color.black);
-        }
     }
 
     public void associate(DrawingPanel drawingPanel) {
         this.drawingPanel = drawingPanel;
+        this.rectangleTool.doClick();
     }
 
     private class ActionHandler implements ActionListener {
@@ -63,13 +59,13 @@ public class ToolBar extends JToolBar {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == rectangleTool) {
-                drawingPanel.setSelectedTool(ETools.eRectangle);
+                drawingPanel.setSelectedTool(new TRectangle());
             } else if(e.getSource() == ovalTool) {
-                drawingPanel.setSelectedTool(ETools.eOval);
+                drawingPanel.setSelectedTool(new TOval());
             } else if(e.getSource() == lineTool) {
-                drawingPanel.setSelectedTool(ETools.eLine);
+                drawingPanel.setSelectedTool(new TLine());
             } else if(e.getSource() == polygonTool){
-                drawingPanel.setSelectedTool(ETools.ePolygon);
+                drawingPanel.setSelectedTool(new TPolygon());
             }
         }
     }
