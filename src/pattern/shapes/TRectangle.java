@@ -8,7 +8,11 @@ public class TRectangle extends TShape {
     public TRectangle() {
     }
 
-    public void start(int x, int y) {
+    public TShape clone() {
+        return new TRectangle();
+    }
+
+    public void setOrigin(int x, int y) {
         this.x = x;
         this.y = y;
         this.width = 0;

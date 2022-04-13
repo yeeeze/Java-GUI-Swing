@@ -8,7 +8,11 @@ public class TOval extends TShape {
     public TOval() {
     }
 
-    public void start(int x, int y) {
+    public TShape clone() {
+        return new TOval();
+    }
+
+    public void setOrigin(int x, int y) {
         this.x = x;
         this.y = y;
         this.width = 0;

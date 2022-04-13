@@ -8,7 +8,11 @@ public class TLine extends TShape {
     public TLine() {
     }
 
-    public void start(int x1, int y1) {
+    public TShape clone() {
+        return new TLine();
+    }
+
+    public void setOrigin(int x1, int y1) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x1;

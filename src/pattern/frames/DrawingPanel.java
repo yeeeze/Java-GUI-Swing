@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
+import pattern.global.Constants;
+import pattern.global.Constants.ETools;
 import pattern.shapes.TLine;
 import pattern.shapes.TOval;
 import pattern.shapes.TRectangle;
@@ -17,15 +19,6 @@ public class DrawingPanel extends JPanel{
 
     // components
     private Vector<TShape> shapes;
-    private ToolBar toolBar;
-    private Graphics2D buff;
-
-//    public enum ETools {
-//        eRectangle,
-//        eOval,
-//        eLine,
-//        ePolygon
-//    }
 
     private enum EDrawingState {
         eIdle,
@@ -34,16 +27,16 @@ public class DrawingPanel extends JPanel{
     }
 
     private EDrawingState eDrawingState;
-    private TShape selectedTool;
+    private ETools selectedTool;
+    private TShape currentShape;
 
-    public DrawingPanel(ToolBar toolBar) {
+    public DrawingPanel() {
         // attributes
         this.eDrawingState = EDrawingState.eIdle;
         this.setBackground(Color.white);
 
         //components
         this.shapes = new Vector<TShape>();
-        this.toolBar = toolBar;
 
         MouseHandler mouseHandler = new MouseHandler();
 
@@ -55,7 +48,7 @@ public class DrawingPanel extends JPanel{
         this.addMouseWheelListener(mouseHandler);
     }
 
-    public void setSelectedTool(TShape selectedTool) {
+    public void setSelectedTool(ETools selectedTool) {
         this.selectedTool = selectedTool;
     }
 
@@ -69,14 +62,12 @@ public class DrawingPanel extends JPanel{
     }
 
     private void prepareDrawing(int x, int y) {
-            Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-            graphics2D.setXORMode(this.getBackground());
+        this.currentShape = this.selectedTool.newShape();
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        graphics2D.setXORMode(this.getBackground());
 
-            if((!this.shapes.isEmpty()) && this.selectedTool.getClass() == this.shapes.lastElement().getClass()) {
-                this.selectedTool = toolBar.newShape(this.selectedTool);
-            }
-            this.selectedTool.start(x, y);
-            this.selectedTool.draw(graphics2D);
+        this.currentShape.setOrigin(x, y);
+        this.currentShape.draw(graphics2D);
     }
 
     private void keepDrawing(int x, int y) {
@@ -84,21 +75,21 @@ public class DrawingPanel extends JPanel{
             graphics2D.setXORMode(this.getBackground());
 
             // erase (배경색을 다시 그린다)
-            this.selectedTool.draw(graphics2D);
+            this.currentShape.draw(graphics2D);
 
             // draw (그림을 그리는 역할은?? : 그래픽스!)
-            this.selectedTool.resize(x, y);
-            this.selectedTool.draw(graphics2D);
+            this.currentShape.resize(x, y);
+            this.currentShape.draw(graphics2D);
     }
 
     // n개의 점을 그릴 때 사용하는 메소드
     private void continueDrawing(int x, int y) {
-        this.selectedTool.addPoint(x, y);
+        this.currentShape.addPoint(x, y);
     }
 
     private void finishDrawing(int x, int y) {
         // 그림 저장
-        this.shapes.add(this.selectedTool);
+        this.shapes.add(this.currentShape);
     }
 
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -115,7 +106,7 @@ public class DrawingPanel extends JPanel{
 
         private void lButtonClick(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                if (selectedTool.getClass() == TPolygon.class) {
+                if (selectedTool == ETools.ePolygon) {
                     eDrawingState = EDrawingState.eNPointDrawing;
                     System.out.println("polygon 생성");
                     prepareDrawing(e.getX(), e.getY());
@@ -142,7 +133,7 @@ public class DrawingPanel extends JPanel{
         @Override
         public void mousePressed(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                if (selectedTool.getClass() != TPolygon.class) {
+                if (selectedTool != ETools.ePolygon) {
                     eDrawingState = EDrawingState.e2PointDrawing;
                     prepareDrawing(e.getX(), e.getY());
                 }

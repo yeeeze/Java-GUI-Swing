@@ -2,6 +2,8 @@ package pattern.frames;
 
 import javax.swing.*;
 
+import pattern.global.Constants;
+import pattern.global.Constants.ETools;
 import pattern.shapes.*;
 
 import java.awt.*;
@@ -25,22 +27,29 @@ public class ToolBar extends JToolBar {
         ButtonGroup buttonGroup = new ButtonGroup();
         ActionHandler actionHandler = new ActionHandler();
 
+        for(ETools eTool: ETools.values()) {
+            // 버튼의 갯수를 어떻게 알지?? 반복문 횟수말이야
+        }
         this.rectangleTool = new JRadioButton("rectangle");
+        this.rectangleTool.setActionCommand(ETools.eRectangle.name());
         this.rectangleTool.addActionListener(actionHandler);
         this.add(this.rectangleTool);
         buttonGroup.add(this.rectangleTool);
 
         this.ovalTool = new JRadioButton("oval");
+        this.ovalTool.setActionCommand(ETools.eOval.name());
         this.ovalTool.addActionListener(actionHandler);
         this.add(this.ovalTool);
         buttonGroup.add(this.ovalTool);
 
         this.lineTool = new JRadioButton("line");
+        this.lineTool.setActionCommand(ETools.eLine.name());
         this.lineTool.addActionListener(actionHandler);
         this.add(this.lineTool);
         buttonGroup.add(this.lineTool);
 
         this.polygonTool = new JRadioButton("polygon");
+        this.polygonTool.setActionCommand(ETools.ePolygon.name());
         this.polygonTool.addActionListener(actionHandler);
         this.add(this.polygonTool);
         buttonGroup.add(this.polygonTool);
@@ -51,34 +60,11 @@ public class ToolBar extends JToolBar {
         this.rectangleTool.doClick();
     }
 
-    public TShape newShape(TShape tShape) {
-        if (tShape.getClass() == TRectangle.class) {
-            return new TRectangle();
-        }
-        if (tShape.getClass() == TOval.class) {
-            return new TOval();
-        }
-        if (tShape.getClass() == TLine.class) {
-            return new TLine();
-        }
-        else {
-            return new TPolygon();
-        }
-    }
-
     private class ActionHandler implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == rectangleTool) {
-                drawingPanel.setSelectedTool(new TRectangle());
-            } else if(e.getSource() == ovalTool) {
-                drawingPanel.setSelectedTool(new TOval());
-            } else if(e.getSource() == lineTool) {
-                drawingPanel.setSelectedTool(new TLine());
-            } else if(e.getSource() == polygonTool){
-                drawingPanel.setSelectedTool(new TPolygon());
-            }
+            drawingPanel.setSelectedTool(ETools.valueOf(e.getActionCommand()));
         }
     }
 }
