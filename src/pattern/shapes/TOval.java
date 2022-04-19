@@ -1,11 +1,12 @@
 package pattern.shapes;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 
 public class TOval extends TShape {
-    private int x, y, width, height;
 
     public TOval() {
+        this.shape = new Ellipse2D.Double();
     }
 
     public TShape clone() {
@@ -13,24 +14,21 @@ public class TOval extends TShape {
     }
 
     public void setOrigin(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.width = 0;
-        this.height = 0;
+        Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;
+        oval.setFrame(x, y, 0, 0);
     }
 
     public void resize(int x, int y) {
-        this.width = x - this.x;
-        this.height = y - this.y;
+        Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;
+        oval.setFrame(oval.x, oval.y, x - oval.x, y - oval.y );
     }
 
     public void draw(Graphics2D graphics2D) {
-        graphics2D.drawOval(this.x, this.y, this.width, this.height);
+        graphics2D.draw(this.shape);
     }
 
 	@Override
 	public boolean contains(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
+        return this.shape.contains(x, y);
 	}
 }
