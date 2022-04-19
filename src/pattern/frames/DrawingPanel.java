@@ -91,7 +91,23 @@ public class DrawingPanel extends JPanel{
         // 그림 저장
         this.shapes.add(this.currentShape);
     }
+    
+    private boolean onShape(int x, int y) {
+    	for(TShape shape: this.shapes) {
+    		if(shape.contains(x, y)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 
+    private void changeCursor(int x, int y) {
+    	Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+    	if(this.onShape(x, y)) {
+    		cursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+    	}
+    	this.setCursor(cursor);
+    }
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -127,6 +143,9 @@ public class DrawingPanel extends JPanel{
         public void mouseMoved(MouseEvent e) {
             if(eDrawingState == EDrawingState.eNPointDrawing){
                 keepDrawing(e.getX(), e.getY());
+            }
+            else if (eDrawingState == EDrawingState.eIdle) {
+            	changeCursor(e.getX(), e.getY());
             }
         }
 

@@ -39,4 +39,10 @@ public class TPolygon extends TShape {
     public void draw(Graphics2D graphics2D) {
         graphics2D.drawPolyline(xPoints, yPoints, nPoints);
     }
+
+	@Override
+	public boolean contains(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

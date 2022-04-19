@@ -13,8 +13,6 @@ public class ToolBar extends JToolBar {
     private static final long serialVersionUTD = 1L;
 
     // components
-    private List<JRadioButton> buttonList = new ArrayList<>();
-
     // associations
     private DrawingPanel drawingPanel;
 
@@ -24,17 +22,18 @@ public class ToolBar extends JToolBar {
         ActionHandler actionHandler = new ActionHandler();
 
         for(ETools eTool: ETools.values()) {
-            buttonList.add(new JRadioButton(eTool.getButtonName()));
-            this.buttonList.get(eTool.ordinal()).setActionCommand(eTool.name());
-            this.buttonList.get(eTool.ordinal()).addActionListener(actionHandler);
-            this.add(this.buttonList.get(eTool.ordinal()));
-            buttonGroup.add(this.buttonList.get(eTool.ordinal()));
+            JRadioButton toolButton = new JRadioButton(eTool.getLable());
+            toolButton.setActionCommand(eTool.name());
+            toolButton.addActionListener(actionHandler);
+            this.add(toolButton);
+            buttonGroup.add(toolButton);
         }
     }
 
     public void associate(DrawingPanel drawingPanel) {
         this.drawingPanel = drawingPanel;
-        this.buttonList.get(ETools.eRectangle.ordinal()).doClick();
+        JRadioButton defaultButton = (JRadioButton) this.getComponent(ETools.eRectangle.ordinal());
+        defaultButton.doClick();
     }
 
     private class ActionHandler implements ActionListener {

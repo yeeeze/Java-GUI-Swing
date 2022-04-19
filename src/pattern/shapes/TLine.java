@@ -27,4 +27,10 @@ public class TLine extends TShape {
     public void draw(Graphics2D graphics2D) {
         graphics2D.drawLine(this.x1, this.y1, this.x2, this.y2);
     }
+
+	@Override
+	public boolean contains(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
