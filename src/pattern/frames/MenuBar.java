@@ -12,6 +12,8 @@ public class MenuBar extends JMenuBar{
     // components
     private FileMenu fileMenu;
     private EditMenu editMenu;
+    
+    private DrawingPanel drawingPanel;
 
     public MenuBar(){
         // components
@@ -20,5 +22,10 @@ public class MenuBar extends JMenuBar{
 
         this.editMenu = new EditMenu("Edit");
         this.add(this.editMenu);
+    }
+    
+    public void associate(DrawingPanel drawingPanel) {
+    	this.drawingPanel = drawingPanel;
+    	this.fileMenu.associate(this.drawingPanel);
     }
 }

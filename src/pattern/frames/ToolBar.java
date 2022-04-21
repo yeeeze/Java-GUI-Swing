@@ -5,8 +5,6 @@ import javax.swing.*;
 import pattern.global.Constants.ETools;
 
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ToolBar extends JToolBar {
     // attributes
@@ -22,7 +20,7 @@ public class ToolBar extends JToolBar {
         ActionHandler actionHandler = new ActionHandler();
 
         for(ETools eTool: ETools.values()) {
-            JRadioButton toolButton = new JRadioButton(eTool.getLable());
+            JRadioButton toolButton = new JRadioButton(eTool.getLabel());
             toolButton.setActionCommand(eTool.name());
             toolButton.addActionListener(actionHandler);
             this.add(toolButton);

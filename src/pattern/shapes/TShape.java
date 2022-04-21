@@ -2,8 +2,9 @@ package pattern.shapes;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.io.Serializable;
 
-abstract public class TShape {
+abstract public class TShape implements Serializable {
 	protected Shape shape;
 	
     public abstract void setOrigin(int x, int y);
