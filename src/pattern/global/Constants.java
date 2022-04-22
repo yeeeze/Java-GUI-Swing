@@ -31,8 +31,7 @@ public class Constants {
         eNew("새로만들기"),
         eOpen("열기"),
         eSave("저장하기"),
-        eSaveAs("다른이름으로"),
-        eClose("닫기"),
+        eSaveAs("다른이름으로저장"),
         ePrint("프린트"),
         eQuit("종료");
 

@@ -31,6 +31,7 @@ public class MainFrame extends JFrame {
         this.add(this.drawingPanel, BorderLayout.CENTER);
 
         // association (자식과 자식과의 관계)
+        this.menuBar.associate(this.drawingPanel);
         this.toolBar.associate(this.drawingPanel);
         setTitle("yeji window");
     }
