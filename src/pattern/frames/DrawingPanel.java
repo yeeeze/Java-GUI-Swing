@@ -3,17 +3,21 @@ package pattern.frames;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 import java.util.Vector;
 
 import pattern.global.Constants;
 import pattern.global.Constants.ETools;
+import pattern.global.Constants.SaveState;
 import pattern.shapes.TLine;
 import pattern.shapes.TOval;
 import pattern.shapes.TRectangle;
 import pattern.shapes.TPolygon;
 import pattern.shapes.TShape;
 
-public class DrawingPanel extends JPanel{
+public class DrawingPanel extends JPanel implements Printable{
     // attribute
     private static final long serialVersionUTD = 1L;
 
@@ -24,6 +28,8 @@ public class DrawingPanel extends JPanel{
     private ETools selectedTool;
     private TShape currentShape;
 
+    private SaveState saveState;
+    
     // working variables
     private enum EDrawingState {
         eIdle,
@@ -50,6 +56,13 @@ public class DrawingPanel extends JPanel{
         this.addMouseWheelListener(mouseHandler);
     }
     
+    public SaveState getSaveState() {
+    	return this.saveState;
+    }
+    
+    public void setSaveState(SaveState saveState) {
+    	this.saveState = saveState;
+    }
     
     @SuppressWarnings("unchecked")
 	public void setShapes(Object shapes) {
@@ -65,6 +78,12 @@ public class DrawingPanel extends JPanel{
         this.selectedTool = selectedTool;
     }
 
+    public void remove() {
+    	this.removeAll();
+    	this.shapes = new Vector<TShape>();
+    	this.repaint();
+    }
+    
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
@@ -121,6 +140,18 @@ public class DrawingPanel extends JPanel{
     	}
     	this.setCursor(cursor);
     }
+    
+	@Override
+	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+		// TODO Auto-generated method stub
+		if (pageIndex >= 1)
+			return NO_SUCH_PAGE;
+		graphics.translate((int)pageFormat.getImageableX(), (int)pageFormat.getImageableY());
+
+			paint(graphics);
+			return PAGE_EXISTS;
+	}
+	
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -149,6 +180,7 @@ public class DrawingPanel extends JPanel{
             if(eDrawingState == EDrawingState.eNPointDrawing){
                 finishDrawing(e.getX(), e.getY());
                 eDrawingState = EDrawingState.eIdle;
+                saveState = SaveState.exist;
             }
         }
 
@@ -184,6 +216,7 @@ public class DrawingPanel extends JPanel{
             if(eDrawingState == EDrawingState.e2PointDrawing){
                 finishDrawing(e.getX(), e.getY());
                 eDrawingState = EDrawingState.eIdle;
+                saveState = SaveState.exist;
             }
         }
 

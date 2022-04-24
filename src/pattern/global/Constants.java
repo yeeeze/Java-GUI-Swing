@@ -36,6 +36,7 @@ public class Constants {
         eQuit("종료");
 
         private String label;
+        
         private EFileMenu(String label) {
             this.label = label;
         }
@@ -43,5 +44,10 @@ public class Constants {
         public String getLabel() {
             return this.label;
         }
+    }
+    
+    public enum SaveState {
+    	exist,
+    	done	
     }
 }
