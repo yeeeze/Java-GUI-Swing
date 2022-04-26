@@ -59,7 +59,6 @@ public class DrawingPanel extends JPanel implements Printable{
     
     public void init() {
         this.eDrawingState = EDrawingState.eIdle;
-        this.setBackground(Color.white);
         this.updated = false;
         
     	this.removeAll();
