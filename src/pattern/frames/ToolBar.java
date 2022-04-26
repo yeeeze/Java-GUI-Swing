@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import pattern.global.Constants.ETools;
 
+import java.awt.Image;
 import java.awt.event.*;
 
 public class ToolBar extends JToolBar {
@@ -20,8 +21,14 @@ public class ToolBar extends JToolBar {
         ActionHandler actionHandler = new ActionHandler();
 
         for(ETools eTool: ETools.values()) {
-            JRadioButton toolButton = new JRadioButton(eTool.getLabel());
+        	ImageIcon icon = new ImageIcon("icon/" + eTool.name() + ".png");
+        	Image img = icon.getImage();
+        	Image updateImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        	icon = new ImageIcon(updateImg);
+        	
+            JButton toolButton = new JButton(icon);
             toolButton.setActionCommand(eTool.name());
+            toolButton.setToolTipText(eTool.getLabel());
             toolButton.addActionListener(actionHandler);
             this.add(toolButton);
             buttonGroup.add(toolButton);
@@ -30,7 +37,7 @@ public class ToolBar extends JToolBar {
 
     public void associate(DrawingPanel drawingPanel) {
         this.drawingPanel = drawingPanel;
-        JRadioButton defaultButton = (JRadioButton) this.getComponent(ETools.eRectangle.ordinal());
+        JButton defaultButton = (JButton) this.getComponent(ETools.eRectangle.ordinal());
         defaultButton.doClick();
     }
 
