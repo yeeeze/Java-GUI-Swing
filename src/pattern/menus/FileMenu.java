@@ -24,13 +24,15 @@ public class FileMenu extends JMenu {
     private static final long serialVersionUTD = 1L;
 
     //private String openFilePath = null;
-    private File openFile = null;
+    private File file;
     private JFrame dialog;
-   
+    
     private DrawingPanel drawingPanel;
     
     public FileMenu(String title) {
         super(title);
+
+		this.file = null;
 
         ActionHandler actionHandler = new ActionHandler();
         for(EFileMenu eMenuItem: EFileMenu.values()) {
@@ -44,90 +46,108 @@ public class FileMenu extends JMenu {
     public void associate(DrawingPanel drawingPanel) {
     	this.drawingPanel = drawingPanel;
     }
-    
 
-	public void create() {
-		this.drawingPanel.remove();
+	private void load(File file) {
+		try {
+			FileInputStream fileInputStream = new FileInputStream(file);
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			Object object = objectInputStream.readObject();
+			this.drawingPanel.setShapes(object);
+			objectInputStream.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
-    
-    private void store() {    	
-    	if(this.openFile == null) {
-    		storeAs();
-    	}
-    	else {
-        	try {
-        		FileOutputStream fileOutputStream = new FileOutputStream(this.openFile);
-        		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        		objectOutputStream.writeObject(this.drawingPanel.getShapes());
-        		objectOutputStream.close();
-        	} catch (FileNotFoundException e) {
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-    	}
-    }
-    
 
-	public void storeAs() {
-		JFileChooser fileChooser = new JFileChooser();
-		int result = fileChooser.showSaveDialog(null);
-		
-		if(result == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fileChooser.getSelectedFile();
-			try {			
-				FileOutputStream fileOutputStream = new FileOutputStream(selectedFile);
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-				objectOutputStream.writeObject(this.drawingPanel.getShapes());			
-				objectOutputStream.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+	private void store(File file) {
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			objectOutputStream.writeObject(this.drawingPanel.getShapes());
+			objectOutputStream.close();
+			this.drawingPanel.setUpdated(false);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean checkSave() {
+		boolean bCancel = false;
+		int reply = JOptionPane.NO_OPTION;
+		if(this.drawingPanel.isUpdated()) {
+			reply = JOptionPane.showConfirmDialog(this.drawingPanel, "변경내용을 저장할까요? 저장하지 않으면 변경 사항이 유실됩니다.");
+			if(reply == JOptionPane.CANCEL_OPTION) {
+				bCancel = true;
+			}
+		}
+		if(!bCancel) {
+			if(reply == JOptionPane.OK_OPTION) {
+				bCancel = this.save();
+			}
+		}
+		return bCancel;
+	}
+
+	public void newPanel() {
+		boolean bCancel = this.checkSave();
+		if(!bCancel) {
+			this.drawingPanel.init();
+			this.file = null;
+		}
+	}
+
+	public void open() {
+		boolean bCancel = this.checkSave();
+		if(!bCancel) {
+			JFileChooser fileChooser = new JFileChooser();
+			int result = fileChooser.showOpenDialog(this.drawingPanel);
+
+			if(result == JFileChooser.APPROVE_OPTION) {
+				this.file = fileChooser.getSelectedFile();
+				this.load(this.file);
 			}
 		}
 	}
-    
-    private void load() {
-		JFileChooser fileChooser = new JFileChooser();
-		int result = fileChooser.showOpenDialog(null);
-		
-		if(result == JFileChooser.APPROVE_OPTION) {
-			this.openFile = fileChooser.getSelectedFile();
-			try {
-				FileInputStream fileInputStream = new FileInputStream(openFile);
-				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-				Object object = objectInputStream.readObject();
-				this.drawingPanel.setShapes(object);
-				objectInputStream.close();
-				
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+
+	public boolean save() {
+		boolean bCancel = false;
+		if(this.drawingPanel.isUpdated()) {
+			if(this.file == null) {
+				bCancel = this.saveAs();
+			}
+			else {
+				this.store(this.file);
 			}
 		}
+		return bCancel;
+	}
 
-    }
+	public boolean saveAs() {
+		boolean bCancel = false;
+		
+		JFileChooser fileChooser = new JFileChooser();
+		int result = fileChooser.showSaveDialog(this.drawingPanel);
+		
+		if(result == JFileChooser.APPROVE_OPTION) {
+			this.file = fileChooser.getSelectedFile();
+			this.store(this.file);
+		}
+		else {
+			bCancel = true;
+		}
+		return bCancel;
+	}
     
 	public void quit() {
-		if(this.drawingPanel.getSaveState() == SaveState.exist) {
-			this.dialog = new JFrame();
-			int result = JOptionPane.showConfirmDialog(dialog, "변경 사항을 저장하시겠습니까? 저장하지 않으면 변경 사항이 유실됩니다.");
-			
-			if(result == JOptionPane.CANCEL_OPTION) {
-				this.dialog.setVisible(false);
-			}
-			else if(result == JOptionPane.NO_OPTION) {
-				System.exit(0);
-			}
-			else if(result == JOptionPane.YES_OPTION) {
-				storeAs();
-			}
-		}		
-		else {
+		boolean bCancel = this.checkSave();
+		if(!bCancel) {
 			System.exit(0);
 		}
 	}
@@ -151,18 +171,16 @@ public class FileMenu extends JMenu {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals(EFileMenu.eOpen.name())) {
-				load();
+				open();
 			}
 			else if(e.getActionCommand().equals(EFileMenu.eSave.name())) {
-				store();
-				drawingPanel.setSaveState(SaveState.done);
+				save();
 			}
 			else if(e.getActionCommand().equals(EFileMenu.eSaveAs.name())) {
-				storeAs();
-				drawingPanel.setSaveState(SaveState.done);
+				saveAs();
 			}
 			else if(e.getActionCommand().equals(EFileMenu.eNew.name())) {
-				create();
+				newPanel();
 			}
 			else if(e.getActionCommand().equals(EFileMenu.ePrint.name()) ) {
 				print();

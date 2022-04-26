@@ -1,6 +1,7 @@
 package pattern.frames;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.print.PageFormat;
@@ -20,15 +21,14 @@ import pattern.shapes.TShape;
 public class DrawingPanel extends JPanel implements Printable{
     // attribute
     private static final long serialVersionUTD = 1L;
-
+    private boolean updated;
+    
     // components
     private Vector<TShape> shapes;
 
     // associated attribute
     private ETools selectedTool;
     private TShape currentShape;
-
-    private SaveState saveState;
     
     // working variables
     private enum EDrawingState {
@@ -42,6 +42,7 @@ public class DrawingPanel extends JPanel implements Printable{
         // attributes
         this.eDrawingState = EDrawingState.eIdle;
         this.setBackground(Color.white);
+        this.updated = false;
 
         //components
         this.shapes = new Vector<TShape>();
@@ -56,12 +57,22 @@ public class DrawingPanel extends JPanel implements Printable{
         this.addMouseWheelListener(mouseHandler);
     }
     
-    public SaveState getSaveState() {
-    	return this.saveState;
+    public void init() {
+        this.eDrawingState = EDrawingState.eIdle;
+        this.setBackground(Color.white);
+        this.updated = false;
+        
+    	this.removeAll();
+    	this.shapes = new Vector<TShape>();
+    	this.repaint();
     }
     
-    public void setSaveState(SaveState saveState) {
-    	this.saveState = saveState;
+    public boolean isUpdated() {
+    	return this.updated;
+    }
+    
+    public void setUpdated(boolean updated) {
+    	this.updated = updated;
     }
     
     @SuppressWarnings("unchecked")
@@ -76,12 +87,6 @@ public class DrawingPanel extends JPanel implements Printable{
 
     public void setSelectedTool(ETools selectedTool) {
         this.selectedTool = selectedTool;
-    }
-
-    public void remove() {
-    	this.removeAll();
-    	this.shapes = new Vector<TShape>();
-    	this.repaint();
     }
     
     @Override
@@ -122,6 +127,7 @@ public class DrawingPanel extends JPanel implements Printable{
     private void finishDrawing(int x, int y) {
         // 그림 저장
         this.shapes.add(this.currentShape);
+        this.setUpdated(true);
     }
     
     private boolean onShape(int x, int y) {
@@ -143,7 +149,6 @@ public class DrawingPanel extends JPanel implements Printable{
     
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-		// TODO Auto-generated method stub
 		if (pageIndex >= 1)
 			return NO_SUCH_PAGE;
 		graphics.translate((int)pageFormat.getImageableX(), (int)pageFormat.getImageableY());
@@ -180,7 +185,6 @@ public class DrawingPanel extends JPanel implements Printable{
             if(eDrawingState == EDrawingState.eNPointDrawing){
                 finishDrawing(e.getX(), e.getY());
                 eDrawingState = EDrawingState.eIdle;
-                saveState = SaveState.exist;
             }
         }
 
@@ -216,7 +220,6 @@ public class DrawingPanel extends JPanel implements Printable{
             if(eDrawingState == EDrawingState.e2PointDrawing){
                 finishDrawing(e.getX(), e.getY());
                 eDrawingState = EDrawingState.eIdle;
-                saveState = SaveState.exist;
             }
         }
 
