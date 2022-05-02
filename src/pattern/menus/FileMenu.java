@@ -153,17 +153,17 @@ public class FileMenu extends JMenu {
 	}
 	
 	public void print() {
-		PrinterJob printJob = PrinterJob.getPrinterJob();
-		printJob.setPrintable(drawingPanel);
-		
-		if(!printJob.printDialog()) {
-			return;
-		}
-		try {
-			printJob.print();
-		} catch (PrinterException e) {
-			e.printStackTrace();
-		}
+	 		PrinterJob printJob = PrinterJob.getPrinterJob();
+	 		printJob.setPrintable(drawingPanel);
+
+	 		if(!printJob.printDialog()) {
+	 			return;
+	 		}
+	 		try {			
+	 			printJob.print();
+	 		} catch (PrinterException e) {
+	 			e.printStackTrace();
+	 		}
 	}
     
     class ActionHandler implements ActionListener {
