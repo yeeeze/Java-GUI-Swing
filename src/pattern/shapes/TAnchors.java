@@ -4,8 +4,8 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 public class TAnchors {
-    private final static int WIDTH = 15;
-    private final static int HEIGHT = 15;
+    private final static int WIDTH = 10;
+    private final static int HEIGHT = 10;
 
     public enum EAnchors {
         eNW,
@@ -21,7 +21,7 @@ public class TAnchors {
 
     private Ellipse2D anchors[];
 
-    public TAnchors(Ellipse2D[] anchors) {
+    public TAnchors() {
         this.anchors = new Ellipse2D.Double[EAnchors.values().length];
 
         for(EAnchors eAnchors: EAnchors.values()) {
@@ -31,13 +31,14 @@ public class TAnchors {
 
     public void draw(Graphics2D graphics2D, Rectangle boundingRectangle) {
         // anchors 좌표
-        int x = boundingRectangle.x;
-        int y = boundingRectangle.y;
         int w = boundingRectangle.width;
         int h = boundingRectangle.height;
 
         // 좌표 계산
         for(EAnchors eAnchors: EAnchors.values()) {
+            int x = boundingRectangle.x;
+            int y = boundingRectangle.y;
+
             switch (eAnchors) {
                 case eNW:
                     break;
@@ -66,6 +67,8 @@ public class TAnchors {
                     x = x + w/2;
                     break;
                 case eRR:
+                    x = x + w/2;
+                    y = y - 15;
                     break;
                 default:
                     break;

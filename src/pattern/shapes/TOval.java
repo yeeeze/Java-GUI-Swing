@@ -1,12 +1,17 @@
 package pattern.shapes;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 
 public class TOval extends TShape {
 
+    private static final long serialVersionUTD = 1L;
+
     public TOval() {
         this.shape = new Ellipse2D.Double();
+        this.anchors = new TAnchors();
     }
 
     public TShape clone() {
@@ -14,21 +19,26 @@ public class TOval extends TShape {
     }
 
     public void setOrigin(int x, int y) {
-        Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;
-        oval.setFrame(x, y, 0, 0);
+        Ellipse2D ellipse = (Ellipse2D) this.shape;
+        ellipse.setFrame(x, y, 0, 0);
     }
 
     public void resize(int x, int y) {
-        Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;
-        oval.setFrame(oval.x, oval.y, x - oval.x, y - oval.y );
+        Ellipse2D ellipse = (Ellipse2D) this.shape;
+        ellipse.setFrame(ellipse.getX(), ellipse.getY(), x - ellipse.getX(), y - ellipse.getY());
     }
 
-    public void draw(Graphics2D graphics2D) {
-        graphics2D.draw(this.shape);
-    }
-
-	@Override
-	public boolean contains(int x, int y) {
-        return this.shape.contains(x, y);
+	public Rectangle boundingRec() {
+		Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;
+		return oval.getBounds();
+	}
+	
+	public void move(int x, int y) {
+		Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;
+		Rectangle r = oval.getBounds();
+		
+		Point p = new Point(x, y);
+		r.setFrame(p, r.getSize());
+		oval.setFrame(r);
 	}
 }

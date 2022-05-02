@@ -1,36 +1,47 @@
 package pattern.shapes;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 public class TLine extends TShape {
 
+    private static final long serialVersionUTD = 1L;
+
     public TLine() {
         this.shape = new Line2D.Double();
+        this.anchors = new TAnchors();
     }
 
     public TShape clone() {
         return new TLine();
     }
 
-    public void setOrigin(int x1, int y1) {
-        Line2D.Double line = (Line2D.Double) this.shape;
-        line.setLine(x1, y1, x1, y1);
+    public void setOrigin(int x, int y) {
+        Line2D line = (Line2D) this.shape;
+        line.setLine(x, y, x, y);
     }
 
-    public void resize(int x2, int y2) {
-        Line2D.Double line = (Line2D.Double) this.shape;
-        line.x2 = x2;
-        line.y2 = y2;
+    public void resize(int x, int y) {
+        Line2D line = (Line2D) this.shape;
+        line.setLine(line.getX1(), line.getY1(), x, y);
     }
-
-    public void draw(Graphics2D graphics2D) {
-        graphics2D.draw(this.shape);
-    }
-
-	@Override
-	public boolean contains(int x, int y) {
-        return this.shape.contains(x, y);
+	
+	public Rectangle boundingRec() {
+		Line2D.Double line = (Line2D.Double) this.shape;
+		return line.getBounds();
+	}
+	
+	public void move(int x, int y) {
+		Line2D line = (Line2D) this.shape;
+		
+		Rectangle r = line.getBounds();
+		
+		Point p = new Point(x, y);
+		r.setFrame(p, r.getSize());
+		line.setLine(r.getX(), r.getY(), r.getWidth()-r.getX(), r.getHeight()-r.getY());
 	}
 }

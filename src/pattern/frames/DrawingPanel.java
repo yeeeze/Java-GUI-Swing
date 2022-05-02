@@ -9,19 +9,15 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.Vector;
 
-import pattern.global.Constants;
 import pattern.global.Constants.ETools;
-import pattern.global.Constants.SaveState;
-import pattern.shapes.TLine;
-import pattern.shapes.TOval;
-import pattern.shapes.TRectangle;
-import pattern.shapes.TPolygon;
-import pattern.shapes.TShape;
+import pattern.shapes.*;
 
 public class DrawingPanel extends JPanel implements Printable{
     // attribute
     private static final long serialVersionUTD = 1L;
-    private boolean updated;
+    private boolean updated; 
+    private boolean moved;
+    private TShape anchorShape;
     
     // components
     private Vector<TShape> shapes;
@@ -34,7 +30,8 @@ public class DrawingPanel extends JPanel implements Printable{
     private enum EDrawingState {
         eIdle,
         e2PointDrawing,
-        eNPointDrawing
+        eNPointDrawing,
+        eMove
     }
     private EDrawingState eDrawingState;
     
@@ -43,7 +40,7 @@ public class DrawingPanel extends JPanel implements Printable{
         this.eDrawingState = EDrawingState.eIdle;
         this.setBackground(Color.white);
         this.updated = false;
-
+        
         //components
         this.shapes = new Vector<TShape>();
 
@@ -99,23 +96,22 @@ public class DrawingPanel extends JPanel implements Printable{
 
     private void prepareDrawing(int x, int y) {
         this.currentShape = this.selectedTool.newShape();
-        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        graphics2D.setXORMode(this.getBackground());
+        Graphics2D graphics2d = (Graphics2D) this.getGraphics();
+        graphics2d.setXORMode(this.getBackground());
 
         this.currentShape.setOrigin(x, y);
-        this.currentShape.draw(graphics2D);
+        this.currentShape.draw(graphics2d);
     }
-
+    
     private void keepDrawing(int x, int y) {
-            Graphics2D graphics2D = (Graphics2D) this.getGraphics();    // 패널이 가지고 있는 그래픽스를 가져옴
-            graphics2D.setXORMode(this.getBackground());
+        // erase
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        graphics2D.setXORMode(this.getBackground());
+        this.currentShape.draw(graphics2D);
 
-            // erase (배경색을 다시 그린다)
-            this.currentShape.draw(graphics2D);
-
-            // draw (그림을 그리는 역할은?? : 그래픽스!)
-            this.currentShape.resize(x, y);
-            this.currentShape.draw(graphics2D);
+        // draw
+        this.currentShape.resize(x, y);
+        this.currentShape.draw(graphics2D);
     }
 
     // n개의 점을 그릴 때 사용하는 메소드
@@ -127,14 +123,22 @@ public class DrawingPanel extends JPanel implements Printable{
         // 그림 저장
         this.shapes.add(this.currentShape);
         this.setUpdated(true);
+        
+        this.anchorShape = this.currentShape;
+        clickAnchors();
     }
     
-    private boolean onShape(int x, int y) {
+    private boolean onShape(int x, int y) {   	
     	for(TShape shape: this.shapes) {
     		if(shape.contains(x, y)) {
+    			this.anchorShape = shape;
     			return true;
     		}
     	}
+    	return false;
+    }
+    
+    private boolean onAnchors(int x, int y) {   	
     	return false;
     }
 
@@ -143,18 +147,39 @@ public class DrawingPanel extends JPanel implements Printable{
     	if(this.onShape(x, y)) {
     		cursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
     	}
+    	if(this.onAnchors(x, y)) {
+    		
+    	}
     	this.setCursor(cursor);
     }
     
-	@Override
-	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-		if (pageIndex >= 1)
-			return NO_SUCH_PAGE;
-		graphics.translate((int)pageFormat.getImageableX(), (int)pageFormat.getImageableY());
+    private void clickAnchors() {
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        this.anchorShape.anchors.draw(graphics2D, this.anchorShape.boundingRec());
+    }
 
-			paint(graphics);
-			return PAGE_EXISTS;
-	}
+    private void moving(int x, int y) {
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        graphics2D.setXORMode(this.getBackground());
+
+        this.anchorShape.draw(graphics2D);
+        this.anchorShape.anchors.draw(graphics2D, this.anchorShape.boundingRec());
+
+        this.anchorShape.move(x, y);
+        this.anchorShape.draw(graphics2D);
+        this.anchorShape.anchors.draw(graphics2D, this.anchorShape.boundingRec());
+    }
+    
+ 	@Override
+ 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+ 		// TODO Auto-generated method stub
+ 		if (pageIndex >= 1)
+ 			return NO_SUCH_PAGE;
+ 		graphics.translate((int)pageFormat.getImageableX(), (int)pageFormat.getImageableY());
+
+ 			paint(graphics);
+ 			return PAGE_EXISTS;
+ 	}
 	
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
         @Override
@@ -200,7 +225,11 @@ public class DrawingPanel extends JPanel implements Printable{
         @Override
         public void mousePressed(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                if (selectedTool != ETools.ePolygon) {
+                if(onShape(e.getX(), e.getY())) {
+                	clickAnchors();
+                	eDrawingState = EDrawingState.eMove;
+                }
+                else if (selectedTool != ETools.ePolygon) {
                     eDrawingState = EDrawingState.e2PointDrawing;
                     prepareDrawing(e.getX(), e.getY());
                 }
@@ -212,6 +241,9 @@ public class DrawingPanel extends JPanel implements Printable{
             if(eDrawingState == EDrawingState.e2PointDrawing){
                 keepDrawing(e.getX(), e.getY());
             }
+            else if(eDrawingState == EDrawingState.eMove) {
+            	moving(e.getX(), e.getY());
+            }
         }
 
         @Override
@@ -220,10 +252,16 @@ public class DrawingPanel extends JPanel implements Printable{
                 finishDrawing(e.getX(), e.getY());
                 eDrawingState = EDrawingState.eIdle;
             }
+            else if(eDrawingState == EDrawingState.eMove) {
+            	eDrawingState = EDrawingState.eIdle;
+            }
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
+        	if(eDrawingState == EDrawingState.eMove) {
+        		changeCursor(e.getX(), e.getY());
+        	}
         }
 
         @Override

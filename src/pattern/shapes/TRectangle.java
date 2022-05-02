@@ -1,12 +1,15 @@
 package pattern.shapes;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 public class TRectangle extends TShape {
+	private static final long serialVersionUTD = 1L;
 
     public TRectangle() {
     	this.shape = new Rectangle();
+		this.anchors = new TAnchors();
     }
 
     public TShape clone() {
@@ -23,12 +26,15 @@ public class TRectangle extends TShape {
     	rectangle.setSize(x - rectangle.x, y - rectangle.y);
     }
 
-    public void draw(Graphics2D graphics2D) {
-    	graphics2D.draw(this.shape);
-    }
+	public Rectangle boundingRec() {
+		Rectangle rectangle = (Rectangle) this.shape;
+		return rectangle.getBounds();
+	}
 
-	@Override
-	public boolean contains(int x, int y) {
-		return this.shape.contains(x, y);
+	public void move(int x, int y) {
+		Rectangle rectangle = (Rectangle) this.shape;
+
+		Point p = new Point(x, y);
+		rectangle.setFrame(p, rectangle.getSize());
 	}
 }

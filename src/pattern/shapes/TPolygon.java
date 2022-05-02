@@ -3,13 +3,12 @@ package pattern.shapes;
 import java.awt.*;
 
 public class TPolygon extends TShape {
-    private final int MAX_POINTS = 20;
+
+    private static final long serialVersionUTD = 1L;
 
     public TPolygon() {
         this.shape = new Polygon();
-        Polygon polygon = (Polygon) this.shape;
-        polygon.xpoints = new int[MAX_POINTS];
-        polygon.ypoints = new int[MAX_POINTS];
+        this.anchors = new TAnchors();
     }
 
     public TShape clone() {
@@ -17,8 +16,6 @@ public class TPolygon extends TShape {
     }
 
     public void setOrigin(int x, int y) {
-        Polygon polygon = (Polygon) this.shape;
-        polygon.npoints = 0;
         this.addPoint(x, y);
         this.addPoint(x, y);
     }
@@ -34,13 +31,17 @@ public class TPolygon extends TShape {
         polygon.ypoints[polygon.npoints - 1] = y;
     }
 
-    @Override
-    public void draw(Graphics2D graphics2D) {
-        graphics2D.draw(this.shape);
-    }
-
-	@Override
-	public boolean contains(int x, int y) {
-        return this.shape.contains(x, y);
+	public Rectangle boundingRec() {
+		Polygon polygon = (Polygon) this.shape;
+		return polygon.getBounds();
+	}
+	
+	public void move(int x, int y) {
+		Polygon polygon = (Polygon) this.shape;
+		
+		for(int i = 0; i < polygon.npoints; i++) {
+			polygon.xpoints[i] = Math.abs(x - polygon.xpoints[i]);
+			polygon.ypoints[i] = Math.abs(y - polygon.ypoints[i]);
+		}
 	}
 }
