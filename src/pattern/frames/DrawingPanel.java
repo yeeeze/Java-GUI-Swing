@@ -59,6 +59,7 @@ public class DrawingPanel extends JPanel implements Printable{
         this.updated = false;
         
     	this.removeAll();
+        this.anchorShape = null;
     	this.shapes = new Vector<TShape>();
     	this.repaint();
     }
@@ -95,6 +96,10 @@ public class DrawingPanel extends JPanel implements Printable{
     }
 
     private void prepareDrawing(int x, int y) {
+        if(this.anchorShape != null) {
+            clickAnchors();
+        }
+
         this.currentShape = this.selectedTool.newShape();
         Graphics2D graphics2d = (Graphics2D) this.getGraphics();
         graphics2d.setXORMode(this.getBackground());
@@ -128,18 +133,18 @@ public class DrawingPanel extends JPanel implements Printable{
         clickAnchors();
     }
     
-    private boolean onShape(int x, int y) {   	
+    private boolean onShape(int x, int y) {
     	for(TShape shape: this.shapes) {
     		if(shape.contains(x, y)) {
-    			this.anchorShape = shape;
+                this.anchorShape = shape;
     			return true;
     		}
     	}
     	return false;
     }
     
-    private boolean onAnchors(int x, int y) {   	
-    	return false;
+    private boolean onAnchors(int x, int y) {
+        return false;
     }
 
     private void changeCursor(int x, int y) {
@@ -155,6 +160,7 @@ public class DrawingPanel extends JPanel implements Printable{
     
     private void clickAnchors() {
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        graphics2D.setXORMode(this.getBackground());
         this.anchorShape.anchors.draw(graphics2D, this.anchorShape.boundingRec());
     }
 
@@ -226,7 +232,7 @@ public class DrawingPanel extends JPanel implements Printable{
         public void mousePressed(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
                 if(onShape(e.getX(), e.getY())) {
-                	clickAnchors();
+                    clickAnchors();
                 	eDrawingState = EDrawingState.eMove;
                 }
                 else if (selectedTool != ETools.ePolygon) {

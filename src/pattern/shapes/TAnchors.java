@@ -68,7 +68,7 @@ public class TAnchors {
                     break;
                 case eRR:
                     x = x + w/2;
-                    y = y - 15;
+                    y = y - 25;
                     break;
                 default:
                     break;
