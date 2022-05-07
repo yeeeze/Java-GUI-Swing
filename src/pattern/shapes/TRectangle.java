@@ -9,7 +9,6 @@ public class TRectangle extends TShape {
 
     public TRectangle() {
     	this.shape = new Rectangle();
-		this.anchors = new TAnchors();
     }
 
     public TShape clone() {
@@ -25,11 +24,6 @@ public class TRectangle extends TShape {
     	Rectangle rectangle = (Rectangle) this.shape;
     	rectangle.setSize(x - rectangle.x, y - rectangle.y);
     }
-
-	public Rectangle boundingRec() {
-		Rectangle rectangle = (Rectangle) this.shape;
-		return rectangle.getBounds();
-	}
 
 	public void move(int x, int y) {
 		Rectangle rectangle = (Rectangle) this.shape;

@@ -27,11 +27,6 @@ public class TOval extends TShape {
         Ellipse2D ellipse = (Ellipse2D) this.shape;
         ellipse.setFrame(ellipse.getX(), ellipse.getY(), x - ellipse.getX(), y - ellipse.getY());
     }
-
-	public Rectangle boundingRec() {
-		Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;
-		return oval.getBounds();
-	}
 	
 	public void move(int x, int y) {
 		Ellipse2D.Double oval = (Ellipse2D.Double) this.shape;

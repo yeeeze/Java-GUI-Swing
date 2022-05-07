@@ -30,11 +30,6 @@ public class TLine extends TShape {
         line.setLine(line.getX1(), line.getY1(), x, y);
     }
 	
-	public Rectangle boundingRec() {
-		Line2D.Double line = (Line2D.Double) this.shape;
-		return line.getBounds();
-	}
-	
 	public void move(int x, int y) {
 		Line2D line = (Line2D) this.shape;
 		

@@ -31,11 +31,6 @@ public class TPolygon extends TShape {
         polygon.ypoints[polygon.npoints - 1] = y;
     }
 
-	public Rectangle boundingRec() {
-		Polygon polygon = (Polygon) this.shape;
-		return polygon.getBounds();
-	}
-	
 	public void move(int x, int y) {
 		Polygon polygon = (Polygon) this.shape;
 		
