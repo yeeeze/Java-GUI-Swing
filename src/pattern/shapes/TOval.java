@@ -36,4 +36,9 @@ public class TOval extends TShape {
 		r.setFrame(p, r.getSize());
 		oval.setFrame(r);
 	}
+
+    @Override
+    public void rotate(int x, int y) {
+
+    }
 }

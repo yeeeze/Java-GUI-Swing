@@ -39,4 +39,9 @@ public class TPolygon extends TShape {
 			polygon.ypoints[i] = Math.abs(y - polygon.ypoints[i]);
 		}
 	}
+
+    @Override
+    public void rotate(int x, int y) {
+
+    }
 }

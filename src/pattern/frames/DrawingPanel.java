@@ -12,6 +12,8 @@ import java.util.Vector;
 import pattern.global.Constants.ETools;
 import pattern.shapes.*;
 
+import static pattern.shapes.TAnchors.*;
+
 public class DrawingPanel extends JPanel implements Printable{
     // attribute
     private static final long serialVersionUTD = 1L;
@@ -30,7 +32,8 @@ public class DrawingPanel extends JPanel implements Printable{
         eIdle,
         e2PointDrawing,
         eNPointDrawing,
-        eMove
+        eRotating,
+        eMoving
     }
     private EDrawingState eDrawingState;
 
@@ -87,7 +90,6 @@ public class DrawingPanel extends JPanel implements Printable{
 
     public void setSelectedTool(ETools selectedTool) {
         this.selectedTool = selectedTool;
-        eDrawingState = EDrawingState.eIdle;
     }
     
     @Override
@@ -100,7 +102,11 @@ public class DrawingPanel extends JPanel implements Printable{
     }
 
     private void prepareDrawing(int x, int y) {
-        repaint();
+        if(this.selectedShape != null) {
+            this.selectedShape.setSelected(false);
+        }
+        this.repaint();
+
         this.currentShape = this.selectedTool.newShape();
         Graphics2D graphics2d = (Graphics2D) this.getGraphics();
         graphics2d.setXORMode(this.getBackground());
@@ -126,16 +132,64 @@ public class DrawingPanel extends JPanel implements Printable{
     }
 
     private void finishDrawing(int x, int y) {
+        if(this.selectedShape != null) {
+            this.selectedShape.setSelected(false);
+        }
+
+        if(!(this.currentShape instanceof TSelection)) {
+            // 그림 저장
+            this.shapes.add(this.currentShape);
+            this.selectedShape = this.currentShape;
+            this.selectedShape.setSelected(true);
+            this.selectedShape.draw((Graphics2D) this.getGraphics());
+        }
+
+        this.repaint();
+    }
+
+    private void prepareMoving(int x, int y) {
+        changeSelection(x, y);
+    }
+
+    private void keepMoving(int x, int y) {
+        this.selectedShape.setSelected(false);
+        repaint();
+
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
         graphics2D.setXORMode(this.getBackground());
 
-        // 그림 저장
-        this.shapes.add(this.currentShape);
-        this.setUpdated(true);
-        this.currentShape.drawAnchors(graphics2D);
-        this.selectedShape = this.currentShape;
+        this.selectedShape.draw(graphics2D);
+        this.selectedShape.move(x, y);
+        this.selectedShape.draw(graphics2D);
     }
-    
+
+    private void finishMoving(int x, int y) {
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        this.selectedShape.setSelected(true);
+        this.selectedShape.draw(graphics2D);
+    }
+
+    private void prepareRotating(int x, int y) {
+        changeSelection(x, y);
+    }
+
+    private void keepRotating(int x, int y) {
+        this.selectedShape.setSelected(false);
+        repaint();
+
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        graphics2D.setXORMode(this.getBackground());
+
+        this.selectedShape.draw(graphics2D);
+        this.selectedShape.rotate(x, y);
+        this.selectedShape.draw(graphics2D);
+    }
+
+    private void finishRotating(int x, int y) {
+        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
+        this.selectedShape.setSelected(true);
+    }
+
     private TShape onShape(int x, int y) {
     	for(TShape shape: this.shapes) {
     		if(shape.contains(x, y)) {
@@ -144,50 +198,51 @@ public class DrawingPanel extends JPanel implements Printable{
     	}
     	return null;
     }
-    
-    private boolean onAnchors(int x, int y) {
-        return false;
-    }
 
     private void changeSelection(int x, int y) {
-        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        graphics2D.setXORMode(this.getBackground());
-
-        // erase 무조건 다 지움
         if(this.selectedShape != null) {
-            this.selectedShape.drawAnchors(graphics2D);
+            this.selectedShape.setSelected(false);
         }
+        this.repaint();
 
         // draw 클릭한 도형을 그림
         this.selectedShape = this.onShape(x, y);
-        if (this.selectedShape != null) {
-            this.selectedShape.drawAnchors(graphics2D);
+        if(this.selectedShape != null) {
+            this.selectedShape.setSelected(true);
+            this.selectedShape.draw((Graphics2D) this.getGraphics());
         }
     }
 
     private void changeCursor(int x, int y) {
-    	Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
-    	if(this.onShape(x, y) != null) {
-    		cursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
-    	}
-    	if(this.onAnchors(x, y)) {
-    		
-    	}
+    	Cursor cursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+        if (this.selectedTool == ETools.eSelection) {
+            cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+
+            this.currentShape = this.onShape(x, y);
+
+            if (this.currentShape != null) {
+                cursor = new Cursor(Cursor.MOVE_CURSOR);    // 맥에서는 무브 커서가 디폴트랑 똑같음
+                if (this.currentShape.isSelected()) {
+                    EAnchors eAnchors = this.currentShape.geteAnchors();
+
+                    switch (eAnchors) {
+                        case eRR: cursor = new Cursor(Cursor.HAND_CURSOR); break;   //rotate 커서 만들기
+                        case eNW: cursor = new Cursor(Cursor.NW_RESIZE_CURSOR); break;
+                        case eWW: cursor = new Cursor(Cursor.W_RESIZE_CURSOR); break;
+                        case eSW: cursor = new Cursor(Cursor.SW_RESIZE_CURSOR); break;
+                        case eSS: cursor = new Cursor(Cursor.S_RESIZE_CURSOR); break;
+                        case eSE: cursor = new Cursor(Cursor.SE_RESIZE_CURSOR); break;
+                        case eEE: cursor = new Cursor(Cursor.E_RESIZE_CURSOR); break;
+                        case eNE: cursor = new Cursor(Cursor.NE_RESIZE_CURSOR); break;
+                        case eNN: cursor = new Cursor(Cursor.N_RESIZE_CURSOR); break;
+                        default: break;
+                    }
+                }
+            }
+        }
     	this.setCursor(cursor);
     }
 
-    private void moving(int x, int y) {
-        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        graphics2D.setXORMode(this.getBackground());
-
-        this.selectedShape.draw(graphics2D);
-        this.selectedShape.drawAnchors(graphics2D);
-
-        this.selectedShape.move(x, y);
-        this.selectedShape.draw(graphics2D);
-        this.selectedShape.drawAnchors(graphics2D);
-    }
-    
  	@Override
  	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
  		// TODO Auto-generated method stub
@@ -213,13 +268,12 @@ public class DrawingPanel extends JPanel implements Printable{
 
         private void lButtonClick(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                if(selectedTool == ETools.ePolygon) {
+                if (selectedTool == ETools.ePolygon) {
                     eDrawingState = EDrawingState.eNPointDrawing;
                     System.out.println("polygon 생성");
                     prepareDrawing(e.getX(), e.getY());
                 }
-            }
-            else if(eDrawingState == EDrawingState.eNPointDrawing) {
+            } else if(eDrawingState == EDrawingState.eNPointDrawing) {
                 continueDrawing(e.getX(), e.getY());
             }
         }
@@ -227,7 +281,7 @@ public class DrawingPanel extends JPanel implements Printable{
         private void lButtonDoubleClick(MouseEvent e) {
             if(eDrawingState == EDrawingState.eNPointDrawing){
                 finishDrawing(e.getX(), e.getY());
-                eDrawingState = EDrawingState.eMove;
+                eDrawingState = EDrawingState.eIdle;
             }
         }
 
@@ -236,21 +290,35 @@ public class DrawingPanel extends JPanel implements Printable{
             if(eDrawingState == EDrawingState.eNPointDrawing){
                 keepDrawing(e.getX(), e.getY());
             }
-            else if (eDrawingState == EDrawingState.eMove) {
-            	changeCursor(e.getX(), e.getY());
+            else if (eDrawingState == EDrawingState.eIdle) {
+                changeCursor(e.getX(), e.getY());
             }
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            if(eDrawingState == EDrawingState.eMove) {
-                // 도형이 selection 되었는가?를 확인함
-                changeSelection(e.getX(), e.getY());
-            }
-            else if(eDrawingState == EDrawingState.eIdle) {
-                if (selectedTool != ETools.ePolygon) {
-                    eDrawingState = EDrawingState.e2PointDrawing;
-                    prepareDrawing(e.getX(), e.getY());
+            if(eDrawingState == EDrawingState.eIdle) {
+                if (selectedTool == ETools.eSelection) {
+                    // move, rotate, resize 등...
+                    currentShape = onShape(e.getX(), e.getY());
+
+                    if (currentShape != null) {
+                        EAnchors eAnchors = currentShape.geteAnchors();
+                        if (eAnchors == EAnchors.eMove) {
+                            eDrawingState = EDrawingState.eMoving;
+                            prepareMoving(e.getX(), e.getY());
+                        } else if (eAnchors == EAnchors.eRR) {
+                            prepareRotating(e.getX(), e.getY());
+                            eDrawingState = EDrawingState.eRotating;
+                        } else {
+                            // resize
+                        }
+                    }
+                } else {
+                    if (selectedTool != ETools.ePolygon) {
+                        eDrawingState = EDrawingState.e2PointDrawing;
+                        prepareDrawing(e.getX(), e.getY());
+                    }
                 }
             }
         }
@@ -259,9 +327,10 @@ public class DrawingPanel extends JPanel implements Printable{
         public void mouseDragged(MouseEvent e) {
             if(eDrawingState == EDrawingState.e2PointDrawing){
                 keepDrawing(e.getX(), e.getY());
-            }
-            else if(eDrawingState == EDrawingState.eMove) {
-            	moving(e.getX(), e.getY());
+            } else if (eDrawingState == EDrawingState.eMoving) {
+                keepMoving(e.getX(), e.getY());
+            } else if (eDrawingState == EDrawingState.eRotating) {
+                keepRotating(e.getX(), e.getY());
             }
         }
 
@@ -269,7 +338,13 @@ public class DrawingPanel extends JPanel implements Printable{
         public void mouseReleased(MouseEvent e) {
             if(eDrawingState == EDrawingState.e2PointDrawing){
                 finishDrawing(e.getX(), e.getY());
-                eDrawingState = EDrawingState.eMove;
+                eDrawingState = EDrawingState.eIdle;
+            } else if (eDrawingState == EDrawingState.eMoving) {
+                finishMoving(e.getX(), e.getY());
+                eDrawingState = EDrawingState.eIdle;
+            } else if (eDrawingState == EDrawingState.eRotating) {
+                finishRotating(e.getX(), e.getY());
+                eDrawingState = EDrawingState.eRotating;
             }
         }
 

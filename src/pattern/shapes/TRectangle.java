@@ -3,6 +3,7 @@ package pattern.shapes;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 
 public class TRectangle extends TShape {
 	private static final long serialVersionUTD = 1L;
@@ -31,4 +32,11 @@ public class TRectangle extends TShape {
 		Point p = new Point(x, y);
 		rectangle.setFrame(p, rectangle.getSize());
 	}
+
+	@Override
+	public void rotate(int x, int y) {
+		AffineTransform at = new AffineTransform();
+	}
+
+
 }

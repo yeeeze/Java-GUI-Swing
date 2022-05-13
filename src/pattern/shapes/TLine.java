@@ -39,4 +39,9 @@ public class TLine extends TShape {
 		r.setFrame(p, r.getSize());
 		line.setLine(r.getX(), r.getY(), r.getWidth()-r.getX(), r.getHeight()-r.getY());
 	}
+
+    @Override
+    public void rotate(int x, int y) {
+
+    }
 }

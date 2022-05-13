@@ -5,6 +5,7 @@ import pattern.shapes.*;
 public class Constants {
 
     public enum ETools {
+        eSelection("선택", new TSelection()),
         eRectangle("네모", new TRectangle()),
         eOval("동그라미", new TOval()),
         eLine("선", new TLine()),

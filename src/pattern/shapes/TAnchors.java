@@ -16,28 +16,39 @@ public class TAnchors {
         eEE,
         eNE,
         eNN,
-        eRR     // rotate
+        eRR,     // rotate
+        eMove
     }
 
     private Ellipse2D anchors[];
 
     public TAnchors() {
-        this.anchors = new Ellipse2D.Double[EAnchors.values().length];
+        this.anchors = new Ellipse2D.Double[EAnchors.values().length-1];
 
-        for(EAnchors eAnchors: EAnchors.values()) {
-            this.anchors[eAnchors.ordinal()] = new Ellipse2D.Double();
+        for(int i = 0; i<EAnchors.values().length-1; i++) {
+            this.anchors[i] = new Ellipse2D.Double();
         }
+    }
+
+    public EAnchors contains(int x, int y) {
+        for(int i = 0; i<EAnchors.values().length-1; i++) {
+            if(this.anchors[i].contains(x, y)) {
+                return EAnchors.values()[i];
+            }
+        }
+        return null;
     }
 
     public void draw(Graphics2D graphics2D, Rectangle boundingRectangle) {
         // 좌표 계산
-        for(EAnchors eAnchors: EAnchors.values()) {
+        for(int i = 0; i<EAnchors.values().length-1; i++) {
             // anchors 좌표
             int x = boundingRectangle.x - WIDTH/2;
             int y = boundingRectangle.y - HEIGHT/2;
             int w = boundingRectangle.width;
             int h = boundingRectangle.height;
 
+            EAnchors eAnchors = EAnchors.values()[i];
             switch (eAnchors) {
                 case eNW:
                     break;
@@ -74,10 +85,10 @@ public class TAnchors {
             }
 
             this.anchors[eAnchors.ordinal()].setFrame(x, y, WIDTH, HEIGHT);
-            Color foreground = graphics2D.getColor();
-            graphics2D.setColor(graphics2D.getBackground());
-            graphics2D.fill(this.anchors[eAnchors.ordinal()]);
-            graphics2D.setColor(foreground);
+//            Color foreground = graphics2D.getColor();
+//            graphics2D.setColor(graphics2D.getBackground());
+//            graphics2D.fill(this.anchors[eAnchors.ordinal()]);
+//            graphics2D.setColor(foreground);
             graphics2D.draw(this.anchors[eAnchors.ordinal()]);
         }
     }
