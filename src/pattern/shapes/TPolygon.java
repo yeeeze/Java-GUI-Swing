@@ -8,16 +8,23 @@ public class TPolygon extends TShape {
 
     public TPolygon() {
         this.shape = new Polygon();
-        this.anchors = new TAnchors();
     }
 
     public TShape clone() {
         return new TPolygon();
     }
 
-    public void setOrigin(int x, int y) {
+    @Override
+    public void prepareDrawing(int x, int y) {
         this.addPoint(x, y);
         this.addPoint(x, y);
+    }
+
+    @Override
+    public void keepDrawing(int x, int y) {
+        Polygon polygon = (Polygon) this.shape;
+        polygon.xpoints[polygon.npoints - 1] = x;
+        polygon.ypoints[polygon.npoints - 1] = y;
     }
 
     public void addPoint(int x, int y) {
@@ -39,9 +46,4 @@ public class TPolygon extends TShape {
 			polygon.ypoints[i] = Math.abs(y - polygon.ypoints[i]);
 		}
 	}
-
-    @Override
-    public void rotate(int x, int y) {
-
-    }
 }
