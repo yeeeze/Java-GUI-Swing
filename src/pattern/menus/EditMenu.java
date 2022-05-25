@@ -5,13 +5,13 @@ import javax.swing.*;
 public class EditMenu extends JMenu {
     private static final long serialVersionUTD = 1L;
 
-    private JMenuItem undoItem;
-    private JMenuItem redoItem;
-    private JMenuItem cutItem;
-    private JMenuItem copyItem;
-    private JMenuItem pasteItem;
-    private JMenuItem groupItem;
-    private JMenuItem ungroupItem;
+    private final JMenuItem undoItem;
+    private final JMenuItem redoItem;
+    private final JMenuItem cutItem;
+    private final JMenuItem copyItem;
+    private final JMenuItem pasteItem;
+    private final JMenuItem groupItem;
+    private final JMenuItem ungroupItem;
 
     public EditMenu(String s) {
         super(s);

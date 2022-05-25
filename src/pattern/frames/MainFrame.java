@@ -8,9 +8,9 @@ public class MainFrame extends JFrame {
     private static final long serialVersionUTD = 1L;
 
     // components
-    private MenuBar menuBar;
-    private ToolBar toolBar;
-    private DrawingPanel drawingPanel;
+    private final MenuBar menuBar;
+    private final ToolBar toolBar;
+    private final DrawingPanel drawingPanel;
 
     public MainFrame() {
         // attributes

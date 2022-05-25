@@ -2,6 +2,7 @@ package pattern.shapes;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 
 public class TAnchors {
     private final static int WIDTH = 15;
@@ -20,7 +21,24 @@ public class TAnchors {
         eMove
     }
 
-    private Ellipse2D anchors[];
+    private final Ellipse2D[] anchors;
+    private EAnchors eSelectedAnchors, eResizeAnchor;
+
+    public EAnchors geteSelectedAnchors() {
+        return eSelectedAnchors;
+    }
+
+    public void seteSelectedAnchors(EAnchors eSelectedAnchors) {
+        this.eSelectedAnchors = eSelectedAnchors;
+    }
+
+    public EAnchors geteResizeAnchor() {
+        return eResizeAnchor;
+    }
+
+    public void seteResizeAnchor(EAnchors eResizeAnchor) {
+        this.eResizeAnchor = eResizeAnchor;
+    }
 
     public TAnchors() {
         this.anchors = new Ellipse2D.Double[EAnchors.values().length-1];
@@ -30,13 +48,14 @@ public class TAnchors {
         }
     }
 
-    public EAnchors contains(int x, int y) {
+    public boolean contains(int x, int y) {
         for(int i = 0; i<EAnchors.values().length-1; i++) {
             if(this.anchors[i].contains(x, y)) {
-                return EAnchors.values()[i];
+                this.eSelectedAnchors = EAnchors.values()[i];
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     public void draw(Graphics2D graphics2D, Rectangle boundingRectangle) {
@@ -91,5 +110,42 @@ public class TAnchors {
 //            graphics2D.setColor(foreground);
             graphics2D.draw(this.anchors[eAnchors.ordinal()]);
         }
+    }
+
+    // resizeAnchor의 원점 계산
+    public Point2D getResizeAnchorPoint(int x, int y) {
+        switch (this.eSelectedAnchors) {
+            case eNW:
+                this.eResizeAnchor = EAnchors.eSE;
+                break;
+            case eWW:
+                this.eResizeAnchor = EAnchors.eEE;
+                break;
+            case eSW:
+                this.eResizeAnchor = EAnchors.eNE;
+                break;
+            case eSS:
+                this.eResizeAnchor = EAnchors.eNN;
+                break;
+            case eSE:
+                this.eResizeAnchor = EAnchors.eNW;
+                break;
+            case eEE:
+                this.eResizeAnchor = EAnchors.eWW;
+                break;
+            case eNE:
+                this.eResizeAnchor = EAnchors.eSW;
+                break;
+            case eNN:
+                this.eResizeAnchor = EAnchors.eSS;
+                break;
+            default:
+                break;
+        }
+        Point2D point = new Point2D.Double(
+                anchors[eResizeAnchor.ordinal()].getCenterX(),
+                anchors[eResizeAnchor.ordinal()].getCenterY()
+        );
+        return point;
     }
 }

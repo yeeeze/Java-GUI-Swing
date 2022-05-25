@@ -18,7 +18,6 @@ import javax.swing.*;
 
 import pattern.frames.DrawingPanel;
 import pattern.global.Constants.EFileMenu;
-import pattern.global.Constants.SaveState;
 
 public class FileMenu extends JMenu {
     private static final long serialVersionUTD = 1L;
