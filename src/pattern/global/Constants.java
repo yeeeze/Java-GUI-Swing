@@ -16,9 +16,9 @@ public class Constants {
         eLine("선", new TLine(), ETransformationStyle.e2PTransformation),
         ePolygon("다각형", new TPolygon(), ETransformationStyle.eNPTransformation);
 
-        private String label;
-        private TShape tool;
-        private ETransformationStyle eTransformationStyle;
+        private final String label;
+        private final TShape tool;
+        private final ETransformationStyle eTransformationStyle;
 
         ETools(String label, TShape tool, ETransformationStyle eTransformationStyle) {
             this.tool = tool;
@@ -47,10 +47,10 @@ public class Constants {
         ePrint("프린트",""),
         eQuit("종료","");
 
-        private String label;
-        private String toolTipText;
+        private final String label;
+        private final String toolTipText;
         
-        private EFileMenu(String label, String toolTipText) {
+        EFileMenu(String label, String toolTipText) {
             this.label = label;
             this.toolTipText = toolTipText;
         }
@@ -59,9 +59,20 @@ public class Constants {
             return this.label;
         }
     }
-    
-    public enum SaveState {
-    	exist,
-    	done	
+
+    public enum EGrapicsMenu {
+        eLine("라인 모양"),
+        eLineColor("라인 색"),
+        eFill("도형 채우기");
+
+        private final String label;
+
+        EGrapicsMenu(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return this.label;
+        }
     }
 }

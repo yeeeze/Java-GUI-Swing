@@ -2,6 +2,7 @@ package pattern.frames;
 
 import pattern.menus.EditMenu;
 import pattern.menus.FileMenu;
+import pattern.menus.GraphicsMenu;
 
 import javax.swing.*;
 
@@ -10,8 +11,9 @@ public class MenuBar extends JMenuBar{
     private static final long serialVersionUTD = 1L;
 
     // components
-    private FileMenu fileMenu;
-    private EditMenu editMenu;
+    private final FileMenu fileMenu;
+    private final EditMenu editMenu;
+    private final GraphicsMenu graphicsMenu;
     
     private DrawingPanel drawingPanel;
 
@@ -22,6 +24,9 @@ public class MenuBar extends JMenuBar{
 
         this.editMenu = new EditMenu("Edit");
         this.add(this.editMenu);
+
+        this.graphicsMenu = new GraphicsMenu("그래픽 속성");
+        this.add(this.graphicsMenu);
     }
     
     public void associate(DrawingPanel drawingPanel) {
