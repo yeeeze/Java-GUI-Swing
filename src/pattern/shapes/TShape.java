@@ -64,7 +64,7 @@ abstract public class TShape implements Serializable {
 
     public void draw(Graphics2D graphics2D) {
         Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
-        graphics2D.draw(transformedShape);;
+        graphics2D.draw(transformedShape);
 
         // 선택되어 있으면 앵커까지 같이 그려줌
         if(this.bSelected) {

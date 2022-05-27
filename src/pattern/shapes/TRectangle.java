@@ -26,12 +26,4 @@ public class TRectangle extends TShape {
 		Rectangle rectangle = (Rectangle) this.shape;
 		rectangle.setSize(x - rectangle.x, y - rectangle.y);
 	}
-
-
-	public void move(int x, int y) {
-		Rectangle rectangle = (Rectangle) this.shape;
-
-		Point p = new Point(x, y);
-		rectangle.setFrame(p, rectangle.getSize());
-	}
 }
