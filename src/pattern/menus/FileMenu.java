@@ -24,7 +24,6 @@ public class FileMenu extends JMenu {
 
     //private String openFilePath = null;
     private File file;
-    private JFrame dialog;
     
     private DrawingPanel drawingPanel;
     
