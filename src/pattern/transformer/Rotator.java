@@ -14,16 +14,21 @@ public class Rotator extends Transformer {
 
     @Override
     public void prepare(int x, int y, Graphics2D graphics2D) {
-        this.selectedShape.prepareRotating(x, y);
+        this.cx = this.selectedShape.getCenterX();
+        this.cy = this.selectedShape.getCenterY();
     }
 
     @Override
     public void keepTransforming(int x, int y, Graphics2D graphics2D) {
-        this.selectedShape.keepRotating(x, y);
+        double dx = x - this.cx;
+        double dy = y - this.cy;
+        int r = (int) (Math.atan2(dy, dx) * (180.0 / Math.PI));
+
+        affineTransform.rotate(r, cx, cy);
     }
 
     @Override
     public void finalize(int x, int y, Graphics2D graphics2D) {
-        this.selectedShape.finalRotating(x, y);
+
     }
 }
