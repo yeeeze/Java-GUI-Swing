@@ -17,6 +17,7 @@ abstract public class TShape implements Serializable {
     protected Shape shape;
     public TAnchors anchors;
     private AffineTransform affineTransform;    // 축적된 값을 가지고 있음... shape x affineTransform으로 계산
+    private GraphicsAttributes graphicsAttributes;
 
     public TShape() {
         this.bSelected = false;
@@ -24,6 +25,7 @@ abstract public class TShape implements Serializable {
         this.anchors = new TAnchors();
         this.affineTransform = new AffineTransform();
         this.affineTransform.setToIdentity();
+        this.graphicsAttributes = new GraphicsAttributes();
     }
     public abstract TShape clone(); // 새로운 객체 생성
 
@@ -45,6 +47,10 @@ abstract public class TShape implements Serializable {
 
     public TAnchors getAnchors() {
         return this.anchors;
+    }
+
+    public GraphicsAttributes getGraphicsAttributes() {
+        return this.graphicsAttributes;
     }
 
     public double getCenterX() {
@@ -75,8 +81,15 @@ abstract public class TShape implements Serializable {
     public void addPoint(int x, int y){ }
 
     public void draw(Graphics2D graphics2D) {
+        Color color = this.graphicsAttributes.getColor();
+        graphics2D.setColor(color);
+
         Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
-        graphics2D.draw(transformedShape);
+        if (this.graphicsAttributes.isFilled()) {
+            graphics2D.fill(transformedShape);
+        } else {
+            graphics2D.draw(transformedShape);
+        }
 
         // 선택되어 있으면 앵커까지 같이 그려줌
         if(this.bSelected) {

@@ -10,6 +10,7 @@ import java.awt.print.PrinterException;
 import java.util.Vector;
 
 import com.sun.java.accessibility.util.Translator;
+import pattern.colorChange.ColorChange;
 import pattern.global.Constants;
 import pattern.global.Constants.ETools;
 import pattern.shapes.*;
@@ -31,7 +32,8 @@ public class DrawingPanel extends JPanel implements Printable{
     private TShape selectedShape;
     private TShape currentShape;
     private Transformer transformer;
-    
+    private ColorChange colorChange;
+
     // working variables
     private enum EDrawingState {
         eIdle,
@@ -47,6 +49,7 @@ public class DrawingPanel extends JPanel implements Printable{
         eForeground,
         eBackground
     }
+
     public DrawingPanel() {
         // attributes
         this.eDrawingState = EDrawingState.eIdle;
@@ -75,7 +78,7 @@ public class DrawingPanel extends JPanel implements Printable{
     	this.shapes = new Vector<TShape>();
     	this.repaint();
     }
-    
+
     public boolean isUpdated() {
     	return this.updated;
     }
@@ -97,7 +100,7 @@ public class DrawingPanel extends JPanel implements Printable{
     public void setSelectedTool(ETools selectedTool) {
         this.selectedTool = selectedTool;
     }
-    
+
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
@@ -224,6 +227,13 @@ public class DrawingPanel extends JPanel implements Printable{
             }
         }
     	this.setCursor(cursor);
+    }
+
+    public void changeColor(Color color) {
+        this.colorChange = new ColorChange(this.selectedShape);
+
+        this.colorChange.changeColor(color);
+        this.selectedShape.draw((Graphics2D) this.getGraphics());
     }
 
  	@Override
