@@ -24,4 +24,14 @@ public class ColorChange {
     public void changeColor(Color color) {
         this.graphicsAttributes.setColor(color);
     }
+
+    public boolean filled() {
+        if (this.graphicsAttributes.isFilled()) {
+            this.graphicsAttributes.setFilled(false);
+            return false;
+        } else {
+            this.graphicsAttributes.setFilled(true);
+            return true;
+        }
+    }
 }

@@ -236,6 +236,16 @@ public class DrawingPanel extends JPanel implements Printable{
         this.selectedShape.draw((Graphics2D) this.getGraphics());
     }
 
+    public void fill() {
+        this.colorChange = new ColorChange(this.selectedShape);
+
+        if (this.colorChange.filled()) {
+            this.selectedShape.draw((Graphics2D) this.getGraphics());
+        } else {
+            repaint();
+        }
+    }
+
  	@Override
  	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
  		// TODO Auto-generated method stub

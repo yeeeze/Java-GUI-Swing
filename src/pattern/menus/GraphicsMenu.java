@@ -46,7 +46,7 @@ public class GraphicsMenu extends JMenu {
     }
 
     public void fill() {
-
+        this.drawingPanel.fill();
     }
 
     class ActionHandler implements ActionListener {
