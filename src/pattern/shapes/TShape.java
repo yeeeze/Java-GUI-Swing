@@ -96,4 +96,9 @@ abstract public class TShape implements Serializable {
             this.anchors.draw(graphics2D, transformedShape.getBounds());
         }
     }
+
+    public void reset() {
+        this.shape = this.affineTransform.createTransformedShape(this.shape);
+        this.affineTransform.setToIdentity();
+    }
 }

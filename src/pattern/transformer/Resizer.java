@@ -34,7 +34,7 @@ public class Resizer extends Transformer {
 
     @Override
     public void finalize(int x, int y, Graphics2D graphics2D) {
-
+        this.selectedShape.reset();
     }
 
     private void getResizeScale(int x, int y) {
