@@ -45,7 +45,11 @@ public class ToolBar extends JToolBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            drawingPanel.setSelectedTool(ETools.valueOf(e.getActionCommand()));
+            if (e.getActionCommand() == ETools.eColorMode.name()) {
+                drawingPanel.changeColorMode();
+            } else {
+                drawingPanel.setSelectedTool(ETools.valueOf(e.getActionCommand()));
+            }
         }
     }
 }

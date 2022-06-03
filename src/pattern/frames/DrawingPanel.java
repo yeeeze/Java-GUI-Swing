@@ -44,16 +44,13 @@ public class DrawingPanel extends JPanel implements Printable{
         eResizing
     }
     private EDrawingState eDrawingState;
-
-    private enum EColor {
-        eForeground,
-        eBackground
-    }
+    private EColorMode eColorMode;
 
     public DrawingPanel() {
         // attributes
         this.eDrawingState = EDrawingState.eIdle;
-        this.setBackground(Color.white);
+        this.eColorMode = EColorMode.eRightMode;
+        this.setBackground(this.eColorMode.geteBackground());
         this.updated = false;
         
         //components
@@ -106,7 +103,7 @@ public class DrawingPanel extends JPanel implements Printable{
         super.paint(graphics);
         // 창 최소화 시켰을 때 지워지는 것을 막기 위해
         for(TShape shape: this.shapes) {
-            shape.draw((Graphics2D) graphics);
+            shape.draw((Graphics2D) graphics, this.eColorMode);
         }
     }
 
@@ -144,11 +141,11 @@ public class DrawingPanel extends JPanel implements Printable{
         // erase
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
         graphics2D.setXORMode(this.getBackground());
-        this.currentShape.draw(graphics2D);
+        this.currentShape.draw(graphics2D, this.eColorMode);
 
         // draw
         this.transformer.keepTransforming(x, y, graphics2D);
-        this.currentShape.draw(graphics2D);
+        this.currentShape.draw(graphics2D, this.eColorMode);
     }
 
     // n개의 점을 그릴 때 사용하는 메소드
@@ -195,7 +192,7 @@ public class DrawingPanel extends JPanel implements Printable{
         this.selectedShape = this.onShape(x, y);
         if(this.selectedShape != null) {
             this.selectedShape.setSelected(true);
-            this.selectedShape.draw((Graphics2D) this.getGraphics());
+            this.selectedShape.draw((Graphics2D) this.getGraphics(), this.eColorMode);
         }
     }
 
@@ -229,18 +226,33 @@ public class DrawingPanel extends JPanel implements Printable{
     	this.setCursor(cursor);
     }
 
+    public void changeColorMode() {
+        if (this.eColorMode == EColorMode.eRightMode) {
+            this.eColorMode = EColorMode.eDarkMode;
+        } else {
+            this.eColorMode = EColorMode.eRightMode;
+        }
+        this.setBackground(this.eColorMode.geteBackground());
+
+        for (TShape shape : this.shapes) {
+            if (shape.getGraphicsAttributes().getColor() == this.eColorMode.geteBackground()) {
+                shape.getGraphicsAttributes().setColor(this.eColorMode.geteForeground());
+            }
+        }
+    }
+
     public void changeColor(Color color) {
         this.colorChange = new ColorChange(this.selectedShape);
 
         this.colorChange.changeColor(color);
-        this.selectedShape.draw((Graphics2D) this.getGraphics());
+        this.selectedShape.draw((Graphics2D) this.getGraphics(), this.eColorMode);
     }
 
     public void fill() {
         this.colorChange = new ColorChange(this.selectedShape);
 
         if (this.colorChange.filled()) {
-            this.selectedShape.draw((Graphics2D) this.getGraphics());
+            this.selectedShape.draw((Graphics2D) this.getGraphics(), this.eColorMode);
         } else {
             repaint();
         }

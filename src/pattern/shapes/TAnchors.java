@@ -1,12 +1,16 @@
 package pattern.shapes;
 
+import pattern.global.Constants;
+
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
+import static pattern.global.Constants.*;
+
 public class TAnchors {
-    private final static int WIDTH = 15;
-    private final static int HEIGHT = 15;
+    private final static int WIDTH = 10;
+    private final static int HEIGHT = 10;
 
     public enum EAnchors {
         eNW,
@@ -58,7 +62,7 @@ public class TAnchors {
         return false;
     }
 
-    public void draw(Graphics2D graphics2D, Rectangle boundingRectangle) {
+    public void draw(Graphics2D graphics2D, EColorMode eColorMode, Rectangle boundingRectangle) {
         // 좌표 계산
         for(int i = 0; i<EAnchors.values().length-1; i++) {
             // anchors 좌표
@@ -104,10 +108,9 @@ public class TAnchors {
             }
 
             this.anchors[eAnchors.ordinal()].setFrame(x, y, WIDTH, HEIGHT);
-//            Color foreground = graphics2D.getColor();
-//            graphics2D.setColor(graphics2D.getBackground());
-//            graphics2D.fill(this.anchors[eAnchors.ordinal()]);
-//            graphics2D.setColor(foreground);
+            graphics2D.setColor(eColorMode.geteBackground());
+            graphics2D.fill(this.anchors[eAnchors.ordinal()]);
+            graphics2D.setColor(eColorMode.geteForeground());
             graphics2D.draw(this.anchors[eAnchors.ordinal()]);
         }
     }

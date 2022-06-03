@@ -2,6 +2,8 @@ package pattern.global;
 
 import pattern.shapes.*;
 
+import java.awt.*;
+
 public class Constants {
 
     public enum ETransformationStyle {
@@ -14,7 +16,8 @@ public class Constants {
         eRectangle("네모", new TRectangle(), ETransformationStyle.e2PTransformation),
         eOval("동그라미", new TOval(), ETransformationStyle.e2PTransformation),
         eLine("선", new TLine(), ETransformationStyle.e2PTransformation),
-        ePolygon("다각형", new TPolygon(), ETransformationStyle.eNPTransformation);
+        ePolygon("다각형", new TPolygon(), ETransformationStyle.eNPTransformation),
+        eColorMode("색상 모드", null, null);
 
         private final String label;
         private final TShape tool;
@@ -73,6 +76,27 @@ public class Constants {
 
         public String getLabel() {
             return this.label;
+        }
+    }
+
+    public enum EColorMode {
+        eRightMode(Color.black, Color.white),
+        eDarkMode(Color.white, Color.black);
+
+        private final Color eForeground;
+        private final Color eBackground;
+
+        EColorMode(Color eForeground, Color eBackground) {
+            this.eForeground = eForeground;
+            this.eBackground = eBackground;
+        }
+
+        public Color geteForeground() {
+            return this.eForeground;
+        }
+
+        public Color geteBackground() {
+            return eBackground;
         }
     }
 }

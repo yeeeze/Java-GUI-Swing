@@ -1,10 +1,13 @@
 package pattern.shapes;
 
+import pattern.global.Constants;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
+import static pattern.global.Constants.*;
 import static pattern.shapes.TAnchors.*;
 
 abstract public class TShape implements Serializable {
@@ -80,7 +83,7 @@ abstract public class TShape implements Serializable {
 
     public void addPoint(int x, int y){ }
 
-    public void draw(Graphics2D graphics2D) {
+    public void draw(Graphics2D graphics2D, EColorMode eColorMode) {
         Color color = this.graphicsAttributes.getColor();
         graphics2D.setColor(color);
 
@@ -93,7 +96,7 @@ abstract public class TShape implements Serializable {
 
         // 선택되어 있으면 앵커까지 같이 그려줌
         if(this.bSelected) {
-            this.anchors.draw(graphics2D, transformedShape.getBounds());
+            this.anchors.draw(graphics2D, eColorMode, transformedShape.getBounds());
         }
     }
 
