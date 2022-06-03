@@ -143,6 +143,8 @@ public class DrawingPanel extends JPanel implements Printable{
         graphics2D.setXORMode(this.getBackground());
         this.currentShape.draw(graphics2D, this.eColorMode);
 
+        this.currentShape.setSelected(false);
+
         // draw
         this.transformer.keepTransforming(x, y, graphics2D);
         this.currentShape.draw(graphics2D, this.eColorMode);
@@ -283,7 +285,6 @@ public class DrawingPanel extends JPanel implements Printable{
 
         private void lButtonClick(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
-                changeSelection(e.getX(), e.getY());
                 if (selectedTool.getTransformationStyle() == ETransformationStyle.eNPTransformation) {
                     eDrawingState = EDrawingState.eNPointDrawing;
                     prepareTransforming(e.getX(), e.getY());
@@ -314,6 +315,7 @@ public class DrawingPanel extends JPanel implements Printable{
         @Override
         public void mousePressed(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
+                changeSelection(e.getX(), e.getY());
                 if(selectedTool.getTransformationStyle() == ETransformationStyle.e2PTransformation) {
                     prepareTransforming(e.getX(), e.getY());    // draw, move, resize 선택
                     eDrawingState = EDrawingState.e2PointDrawing;
