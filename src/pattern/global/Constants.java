@@ -79,9 +79,21 @@ public class Constants {
         }
     }
 
+    private enum EColor {
+        eColor(Color.white, Color.DARK_GRAY);
+
+        private final Color baseColor;
+        private final Color subColor;
+
+        EColor(Color baseColor, Color subColor) {
+            this.baseColor = baseColor;
+            this.subColor = subColor;
+        }
+    }
+
     public enum EColorMode {
-        eRightMode(Color.black, Color.white),
-        eDarkMode(Color.white, Color.black);
+        eRightMode(EColor.eColor.subColor, EColor.eColor.baseColor),
+        eDarkMode(EColor.eColor.baseColor, EColor.eColor.subColor);
 
         private final Color eForeground;
         private final Color eBackground;

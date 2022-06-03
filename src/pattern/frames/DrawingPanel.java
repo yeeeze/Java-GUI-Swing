@@ -125,22 +125,28 @@ public class DrawingPanel extends JPanel implements Printable{
                 // selection
                 this.currentShape = this.selectedTool.newShape();
                 this.transformer = new Drawer(this.currentShape);
+
+                this.colorChange = new ColorChange(this.currentShape);
+                this.colorChange.changeColor(this.eColorMode.geteForeground());
             }
         } else {
             // draw
             this.currentShape = this.selectedTool.newShape();
             this.transformer = new Drawer(this.currentShape);
+
+            this.colorChange = new ColorChange(this.currentShape);
+            this.colorChange.changeColor(this.eColorMode.geteForeground());
         }
 
         Graphics2D graphics2d = (Graphics2D) this.getGraphics();
-        graphics2d.setXORMode(this.getBackground());
+        graphics2d.setXORMode(this.eColorMode.geteBackground());
         this.transformer.prepare(x, y, graphics2d);
     }
     
     private void keepTransforming(int x, int y) {
         // erase
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        graphics2D.setXORMode(this.getBackground());
+        graphics2D.setXORMode(this.eColorMode.geteBackground());
         this.currentShape.draw(graphics2D, this.eColorMode);
 
         this.currentShape.setSelected(false);
@@ -157,7 +163,7 @@ public class DrawingPanel extends JPanel implements Printable{
 
     private void finishTransforming(int x, int y) {
         Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        graphics2D.setXORMode(this.getBackground());
+        graphics2D.setXORMode(this.eColorMode.geteBackground());
         this.transformer.finalize(x, y, graphics2D);
 
         if(this.selectedShape != null) {

@@ -1,6 +1,10 @@
 package pattern.shapes;
 
+import pattern.global.Constants;
+
 import java.awt.*;
+
+import static pattern.global.Constants.*;
 
 public class GraphicsAttributes {
 
@@ -9,7 +13,6 @@ public class GraphicsAttributes {
 
     public GraphicsAttributes() {
         this.filled = false;
-        this.color = Color.black;
     }
 
     public Color getColor() {
