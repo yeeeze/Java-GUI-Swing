@@ -192,7 +192,11 @@ public class DrawingPanel extends JPanel implements Printable{
 
     private void changeSelection(int x, int y) {
         if(this.selectedShape != null) {
-            this.selectedShape.setSelected(false);
+            if (this.selectedShape.onAnchors(x, y)) {
+                return;
+            } else {
+                this.selectedShape.setSelected(false);
+            }
         }
         this.repaint();
 

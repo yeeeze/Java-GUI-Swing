@@ -69,14 +69,23 @@ abstract public class TShape implements Serializable {
 
     public boolean contains(int x, int y) {
         Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
-        if(this.bSelected) {
-            if (this.anchors.contains(x, y)) {
-                return true;
-            }
+
+        if (this.onAnchors(x, y)) {
+            return true;
         }
+
         if(transformedShape.contains(x, y)) {
             this.anchors.seteSelectedAnchors(EAnchors.eMove);
             return true;
+        }
+        return false;
+    }
+
+    public boolean onAnchors(int x, int y) {
+        if (this.bSelected) {
+            if (this.anchors.contains(x, y)) {
+                return true;
+            }
         }
         return false;
     }
