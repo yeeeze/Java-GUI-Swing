@@ -206,6 +206,7 @@ public class DrawingPanel extends JPanel implements Printable{
             if (this.selectedShape.onAnchors(x, y)) {
                 return;
             } else {
+                // 기존에 선택됐던 도형 앵커만 지우고 도형 다시 그리기
                 this.graphics2DBufferedImage.setXORMode(this.eColorMode.geteBackground());
                 this.selectedShape.draw(this.graphics2DBufferedImage, this.eColorMode);
                 this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
