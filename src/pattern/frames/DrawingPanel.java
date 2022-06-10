@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -53,7 +54,7 @@ public class DrawingPanel extends JPanel implements Printable{
         // attributes
         this.eDrawingState = EDrawingState.eIdle;
         this.eColorMode = EColorMode.eRightMode;
-        this.setBackground(this.eColorMode.geteBackground());
+//        this.setBackground(this.eColorMode.geteBackground());
         this.updated = false;
         
         //components
@@ -149,7 +150,10 @@ public class DrawingPanel extends JPanel implements Printable{
             this.colorChange.changeColor(this.eColorMode.geteForeground());
         }
         this.transformer.prepare(x, y);
-        this.graphics2DBufferedImage.setXORMode(this.eColorMode.geteBackground());
+
+        int rgb = this.bufferedImage.getRGB(0, 100);
+        Color bufferedBackground = new Color(rgb);
+        this.graphics2DBufferedImage.setXORMode(bufferedBackground);
     }
     
     private void keepTransforming(int x, int y) {
@@ -260,11 +264,19 @@ public class DrawingPanel extends JPanel implements Printable{
     public void changeColorMode() {
         if (this.eColorMode == EColorMode.eRightMode) {
             this.eColorMode = EColorMode.eDarkMode;
+
+            this.bufferedImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+            this.graphics2DBufferedImage = (Graphics2D) this.bufferedImage.getGraphics();
+
+            this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
         } else {
             this.eColorMode = EColorMode.eRightMode;
+
+            this.bufferedImage = (BufferedImage) this.createImage(this.getWidth(), this.getHeight());
+            this.graphics2DBufferedImage = (Graphics2D) this.bufferedImage.getGraphics();
+
+            this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
         }
-//        this.setBackground(this.eColorMode.geteBackground());
-        this.bufferedImage.setRGB(0, 100, 0xFFFF00);
 
         for (TShape shape : this.shapes) {
             if (shape.getGraphicsAttributes().getColor() == this.eColorMode.geteBackground()) {
@@ -279,17 +291,13 @@ public class DrawingPanel extends JPanel implements Printable{
         this.colorChange = new ColorChange(this.selectedShape);
 
         this.colorChange.changeColor(color);
-        this.selectedShape.draw((Graphics2D) this.getGraphics(), this.eColorMode);
+        this.repaint();
     }
 
     public void fill() {
         this.colorChange = new ColorChange(this.selectedShape);
-
-        if (this.colorChange.filled()) {
-            this.selectedShape.draw((Graphics2D) this.getGraphics(), this.eColorMode);
-        } else {
-            repaint();
-        }
+        this.colorChange.filled();
+        this.repaint();
     }
 
  	@Override

@@ -80,7 +80,7 @@ public class Constants {
     }
 
     private enum EColor {
-        eColor(Color.white, Color.DARK_GRAY);
+        eColor(Color.white, Color.black);
 
         private final Color baseColor;
         private final Color subColor;
