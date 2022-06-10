@@ -96,7 +96,7 @@ public class FileMenu extends JMenu {
 	public void newPanel() {
 		boolean bCancel = this.checkSave();
 		if(!bCancel) {
-			this.drawingPanel.init();
+			this.drawingPanel.initialize();
 			this.file = null;
 		}
 	}

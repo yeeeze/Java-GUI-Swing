@@ -1,10 +1,13 @@
 package pattern.transformer;
 
+import pattern.global.Constants;
 import pattern.shapes.TAnchors;
 import pattern.shapes.TShape;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+
+import static pattern.global.Constants.*;
 
 public abstract class Transformer {
 
@@ -15,7 +18,6 @@ public abstract class Transformer {
     // working
     protected int px, py; // 전 점
     protected double cx, cy; // 기준점
-    protected double xScale, yScale; // 배율 점
 
     public Transformer(TShape selectedShape) {
         this.selectedShape = selectedShape;
@@ -23,8 +25,8 @@ public abstract class Transformer {
         this.anchors = this.selectedShape.getAnchors();
     }
 
-    public abstract void prepare(int x, int y, Graphics2D graphics2D);
-    public abstract void keepTransforming(int x, int y, Graphics2D graphics2D);
-    public abstract void finalize(int x, int y, Graphics2D graphics2D);
+    public abstract void prepare(int x, int y);
+    public abstract void keepTransforming(int x, int y);
+    public abstract void finalize(int x, int y);
 
 }

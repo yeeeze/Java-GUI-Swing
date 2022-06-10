@@ -34,4 +34,7 @@ public class MenuBar extends JMenuBar{
     	this.fileMenu.associate(this.drawingPanel);
         this.graphicsMenu.associate(this.drawingPanel);
     }
+
+    public void initialize() {
+    }
 }

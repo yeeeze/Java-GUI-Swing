@@ -41,6 +41,9 @@ public class ToolBar extends JToolBar {
         defaultButton.doClick();
     }
 
+    public void initialize() {
+    }
+
     private class ActionHandler implements ActionListener {
 
         @Override

@@ -35,4 +35,10 @@ public class MainFrame extends JFrame {
         this.toolBar.associate(this.drawingPanel);
         setTitle("yeji window");
     }
+
+    public void initialize() {
+        this.menuBar.initialize();
+        this.toolBar.initialize();
+        this.drawingPanel.initialize();
+    }
 }

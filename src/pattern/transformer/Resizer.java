@@ -1,5 +1,6 @@
 package pattern.transformer;
 
+import pattern.global.Constants;
 import pattern.shapes.TAnchors;
 import pattern.shapes.TShape;
 
@@ -8,13 +9,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 public class Resizer extends Transformer {
+    protected double xScale, yScale; // 배율 점
 
     public Resizer(TShape selectedShape) {
         super(selectedShape);
     }
 
     @Override
-    public void prepare(int x, int y, Graphics2D graphics2D) {
+    public void prepare(int x, int y) {
         this.px = x;
         this.py = y;
         Point2D resizeAnchorPoint = this.anchors.getResizeAnchorPoint(x, y);
@@ -23,7 +25,7 @@ public class Resizer extends Transformer {
     }
 
     @Override
-    public void keepTransforming(int x, int y, Graphics2D graphics2D) {
+    public void keepTransforming(int x, int y) {
         this.getResizeScale(x, y);
         this.affineTransform.translate(cx, cy);
         this.affineTransform.scale(this.xScale, this.yScale);
@@ -33,7 +35,7 @@ public class Resizer extends Transformer {
     }
 
     @Override
-    public void finalize(int x, int y, Graphics2D graphics2D) {
+    public void finalize(int x, int y) {
         this.selectedShape.reset();
     }
 

@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -26,6 +27,8 @@ public class DrawingPanel extends JPanel implements Printable{
     
     // components
     private Vector<TShape> shapes;
+    private BufferedImage bufferedImage;
+    private Graphics2D graphics2DBufferedImage;
 
     // associated attribute
     private ETools selectedTool;
@@ -65,8 +68,11 @@ public class DrawingPanel extends JPanel implements Printable{
         // wheel
         this.addMouseWheelListener(mouseHandler);
     }
-    
-    public void init() {
+
+    public void initialize() {
+        this.bufferedImage = (BufferedImage) this.createImage(this.getWidth(), this.getHeight());
+        this.graphics2DBufferedImage = (Graphics2D) this.bufferedImage.getGraphics();
+
         this.eDrawingState = EDrawingState.eIdle;
         this.updated = false;
         
@@ -101,10 +107,15 @@ public class DrawingPanel extends JPanel implements Printable{
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
+
+        // 버퍼를 지우고, 전체 그림을 다시 그리고, 모니터에 옮김
+        this.graphics2DBufferedImage.clearRect(0, 0, this.bufferedImage.getWidth(), this.bufferedImage.getHeight());
+
         // 창 최소화 시켰을 때 지워지는 것을 막기 위해
         for(TShape shape: this.shapes) {
-            shape.draw((Graphics2D) graphics, this.eColorMode);
+            shape.draw(this.graphics2DBufferedImage, this.eColorMode);
         }
+        graphics.drawImage(this.bufferedImage, 0, 0, this);
     }
 
     private void prepareTransforming(int x, int y) {
@@ -137,23 +148,22 @@ public class DrawingPanel extends JPanel implements Printable{
             this.colorChange = new ColorChange(this.currentShape);
             this.colorChange.changeColor(this.eColorMode.geteForeground());
         }
-
-        Graphics2D graphics2d = (Graphics2D) this.getGraphics();
-        graphics2d.setXORMode(this.eColorMode.geteBackground());
-        this.transformer.prepare(x, y, graphics2d);
+        this.transformer.prepare(x, y);
+        this.graphics2DBufferedImage.setXORMode(this.eColorMode.geteBackground());
     }
     
     private void keepTransforming(int x, int y) {
         // erase
-        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        graphics2D.setXORMode(this.eColorMode.geteBackground());
-        this.currentShape.draw(graphics2D, this.eColorMode);
-
+        this.currentShape.draw(this.graphics2DBufferedImage, this.eColorMode);
+        this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
         this.currentShape.setSelected(false);
 
+        // transform
+        this.transformer.keepTransforming(x, y);
+
         // draw
-        this.transformer.keepTransforming(x, y, graphics2D);
-        this.currentShape.draw(graphics2D, this.eColorMode);
+        this.currentShape.draw(this.graphics2DBufferedImage, this.eColorMode);
+        this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
     }
 
     // n개의 점을 그릴 때 사용하는 메소드
@@ -162,9 +172,10 @@ public class DrawingPanel extends JPanel implements Printable{
     }
 
     private void finishTransforming(int x, int y) {
-        Graphics2D graphics2D = (Graphics2D) this.getGraphics();
-        graphics2D.setXORMode(this.eColorMode.geteBackground());
-        this.transformer.finalize(x, y, graphics2D);
+        this.graphics2DBufferedImage.setPaintMode();    // 그림을 그리는 모드
+
+        this.currentShape.setSelected(true);
+        this.transformer.finalize(x, y);
 
         if(this.selectedShape != null) {
             this.selectedShape.setSelected(false);
@@ -195,16 +206,23 @@ public class DrawingPanel extends JPanel implements Printable{
             if (this.selectedShape.onAnchors(x, y)) {
                 return;
             } else {
+                this.graphics2DBufferedImage.setXORMode(this.eColorMode.geteBackground());
+                this.selectedShape.draw(this.graphics2DBufferedImage, this.eColorMode);
+                this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
+
+                this.graphics2DBufferedImage.setPaintMode();
                 this.selectedShape.setSelected(false);
+                this.selectedShape.draw(this.graphics2DBufferedImage, this.eColorMode);
+                this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
             }
         }
-        this.repaint();
 
         // draw 클릭한 도형을 그림
         this.selectedShape = this.onShape(x, y);
         if(this.selectedShape != null) {
             this.selectedShape.setSelected(true);
-            this.selectedShape.draw((Graphics2D) this.getGraphics(), this.eColorMode);
+            this.selectedShape.draw(this.graphics2DBufferedImage, this.eColorMode);
+            this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
         }
     }
 
@@ -244,13 +262,16 @@ public class DrawingPanel extends JPanel implements Printable{
         } else {
             this.eColorMode = EColorMode.eRightMode;
         }
-        this.setBackground(this.eColorMode.geteBackground());
+//        this.setBackground(this.eColorMode.geteBackground());
+        this.bufferedImage.setRGB(0, 100, 0xFFFF00);
 
         for (TShape shape : this.shapes) {
             if (shape.getGraphicsAttributes().getColor() == this.eColorMode.geteBackground()) {
                 shape.getGraphicsAttributes().setColor(this.eColorMode.geteForeground());
             }
         }
+
+        repaint();
     }
 
     public void changeColor(Color color) {

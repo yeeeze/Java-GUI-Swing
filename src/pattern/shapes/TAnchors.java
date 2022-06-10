@@ -108,8 +108,8 @@ public class TAnchors {
             }
 
             this.anchors[eAnchors.ordinal()].setFrame(x, y, WIDTH, HEIGHT);
-            graphics2D.setColor(eColorMode.geteBackground());
-            graphics2D.fill(this.anchors[eAnchors.ordinal()]);
+//            graphics2D.setColor(eColorMode.geteBackground());
+//            graphics2D.fill(this.anchors[eAnchors.ordinal()]);
             graphics2D.setColor(eColorMode.geteForeground());
             graphics2D.draw(this.anchors[eAnchors.ordinal()]);
         }
