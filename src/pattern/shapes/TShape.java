@@ -108,6 +108,7 @@ abstract public class TShape implements Serializable {
 
         // 선택되어 있으면 앵커까지 같이 그려줌
         if(this.bSelected) {
+            graphics2D.setStroke(new BasicStroke(1));
             this.anchors.draw(graphics2D, eColorMode, transformedShape.getBounds());
         }
     }
