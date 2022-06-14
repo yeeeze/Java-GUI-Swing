@@ -96,6 +96,9 @@ abstract public class TShape implements Serializable {
         Color color = this.graphicsAttributes.getColor();
         graphics2D.setColor(color);
 
+        Stroke stroke = this.graphicsAttributes.getStroke();
+        graphics2D.setStroke(stroke);
+
         Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
         if (this.graphicsAttributes.isFilled()) {
             graphics2D.fill(transformedShape);

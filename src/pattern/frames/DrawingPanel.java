@@ -109,6 +109,18 @@ public class DrawingPanel extends JPanel implements Printable{
     public void paint(Graphics graphics) {
         super.paint(graphics);
 
+        this.drawAll(graphics);
+//        // 버퍼를 지우고, 전체 그림을 다시 그리고, 모니터에 옮김
+//        this.graphics2DBufferedImage.clearRect(0, 0, this.bufferedImage.getWidth(), this.bufferedImage.getHeight());
+//
+//        // 창 최소화 시켰을 때 지워지는 것을 막기 위해
+//        for(TShape shape: this.shapes) {
+//            shape.draw(this.graphics2DBufferedImage, this.eColorMode);
+//        }
+//        graphics.drawImage(this.bufferedImage, 0, 0, this);
+    }
+
+    public void drawAll(Graphics graphics) {
         // 버퍼를 지우고, 전체 그림을 다시 그리고, 모니터에 옮김
         this.graphics2DBufferedImage.clearRect(0, 0, this.bufferedImage.getWidth(), this.bufferedImage.getHeight());
 
@@ -154,6 +166,7 @@ public class DrawingPanel extends JPanel implements Printable{
         int rgb = this.bufferedImage.getRGB(0, 100);
         Color bufferedBackground = new Color(rgb);
         this.graphics2DBufferedImage.setXORMode(bufferedBackground);
+//        this.repaint();
     }
     
     private void keepTransforming(int x, int y) {
@@ -168,6 +181,8 @@ public class DrawingPanel extends JPanel implements Printable{
         // draw
         this.currentShape.draw(this.graphics2DBufferedImage, this.eColorMode);
         this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
+
+//        this.repaint();
     }
 
     // n개의 점을 그릴 때 사용하는 메소드
@@ -211,7 +226,9 @@ public class DrawingPanel extends JPanel implements Printable{
                 return;
             } else {
                 // 기존에 선택됐던 도형 앵커만 지우고 도형 다시 그리기
-                this.graphics2DBufferedImage.setXORMode(this.eColorMode.geteBackground());
+                int rgb = this.bufferedImage.getRGB(0, 100);
+                Color bufferedBackground = new Color(rgb);
+                this.graphics2DBufferedImage.setXORMode(bufferedBackground);
                 this.selectedShape.draw(this.graphics2DBufferedImage, this.eColorMode);
                 this.getGraphics().drawImage(this.bufferedImage, 0, 0, this);
 
@@ -294,6 +311,13 @@ public class DrawingPanel extends JPanel implements Printable{
         this.repaint();
     }
 
+    public void line(int lineThickness) {
+        this.colorChange = new ColorChange(this.selectedShape);
+
+        this.colorChange.changeStroke(new BasicStroke(lineThickness, BasicStroke.CAP_ROUND,0));
+        this.repaint();
+    }
+
     public void fill() {
         this.colorChange = new ColorChange(this.selectedShape);
         this.colorChange.filled();
@@ -325,6 +349,7 @@ public class DrawingPanel extends JPanel implements Printable{
 
         private void lButtonClick(MouseEvent e) {
             if(eDrawingState == EDrawingState.eIdle) {
+//                changeSelection(e.getX(), e.getY());
                 if (selectedTool.getTransformationStyle() == ETransformationStyle.eNPTransformation) {
                     eDrawingState = EDrawingState.eNPointDrawing;
                     prepareTransforming(e.getX(), e.getY());

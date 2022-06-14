@@ -34,4 +34,8 @@ public class ColorChange {
             return true;
         }
     }
+
+    public void changeStroke(Stroke stroke) {
+        this.graphicsAttributes.setStroke(stroke);
+    }
 }

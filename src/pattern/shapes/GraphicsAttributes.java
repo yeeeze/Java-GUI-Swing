@@ -10,9 +10,11 @@ public class GraphicsAttributes {
 
     private boolean filled;
     private Color color;
+    private Stroke stroke;
 
     public GraphicsAttributes() {
         this.filled = false;
+        this.stroke = new BasicStroke(1, BasicStroke.CAP_ROUND, 0);
     }
 
     public Color getColor() {
@@ -29,5 +31,13 @@ public class GraphicsAttributes {
 
     public void setFilled(boolean filled) {
         this.filled = filled;
+    }
+
+    public Stroke getStroke() {
+        return stroke;
+    }
+
+    public void setStroke(Stroke stroke) {
+        this.stroke = stroke;
     }
 }

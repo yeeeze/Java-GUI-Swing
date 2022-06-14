@@ -64,7 +64,7 @@ public class Constants {
     }
 
     public enum EGrapicsMenu {
-        eLine("라인 모양"),
+        eLine("라인 두께"),
         eLineColor("라인 색"),
         eFill("도형 채우기");
 

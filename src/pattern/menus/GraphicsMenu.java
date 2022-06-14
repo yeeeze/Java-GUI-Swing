@@ -22,10 +22,22 @@ public class GraphicsMenu extends JMenu {
         ActionHandler actionHandler = new ActionHandler();
 
         for (EGrapicsMenu eGrapicsMenu : EGrapicsMenu.values()) {
-            JMenuItem jMenuItem = new JMenuItem(eGrapicsMenu.getLabel());
-            this.add(jMenuItem);
-            jMenuItem.setActionCommand(eGrapicsMenu.name());
-            jMenuItem.addActionListener(actionHandler);
+            if (eGrapicsMenu.getLabel() == "라인 두께") {
+                JMenu jMenu = new JMenu(eGrapicsMenu.getLabel());
+                this.add(jMenu);
+
+                for (int i = 1; i < 7; i++) {
+                    JMenuItem jMenuItem = new JMenuItem(String.valueOf(i));
+                    jMenu.add(jMenuItem);
+                    jMenuItem.setActionCommand(String.valueOf(i));
+                    jMenuItem.addActionListener(actionHandler);
+                }
+            } else {
+                JMenuItem jMenuItem = new JMenuItem(eGrapicsMenu.getLabel());
+                this.add(jMenuItem);
+                jMenuItem.setActionCommand(eGrapicsMenu.name());
+                jMenuItem.addActionListener(actionHandler);
+            }
         }
     }
 
@@ -33,8 +45,8 @@ public class GraphicsMenu extends JMenu {
         this.drawingPanel = drawingPanel;
     }
 
-    public void line() {
-
+    public void line(int lineThickness) {
+        this.drawingPanel.line(lineThickness);
     }
 
     public void lineColor() {
@@ -53,8 +65,8 @@ public class GraphicsMenu extends JMenu {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand() == EGrapicsMenu.eLine.name()) {
-                line();
+            if (e.getActionCommand().length() == 1) {
+                line(Integer.parseInt(e.getActionCommand()));
             } else if (e.getActionCommand() == EGrapicsMenu.eLineColor.name()) {
                 lineColor();
             } else if (e.getActionCommand() == EGrapicsMenu.eFill.name()) {
