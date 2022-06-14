@@ -23,7 +23,7 @@ public class Rotator extends Transformer {
     public void keepTransforming(int x, int y) {
         double dx = x - this.cx;
         double dy = y - this.cy;
-        int r = (int) (Math.atan2(dy, dx) * (180.0 / Math.PI));
+        double r = (double) (Math.atan2(dy, dx) * (180.0 / Math.PI));
 
         affineTransform.rotate(r, cx, cy);
     }

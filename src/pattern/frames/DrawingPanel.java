@@ -121,6 +121,7 @@ public class DrawingPanel extends JPanel implements Printable{
         // 버퍼를 지우고, 전체 그림을 다시 그리고, 모니터에 옮김
         this.graphics2DBufferedImage.clearRect(0, 0, this.bufferedImage.getWidth(), this.bufferedImage.getHeight());
 
+        System.out.println(this.shapes.size());
         // 창 최소화 시켰을 때 지워지는 것을 막기 위해
         for(TShape shape: this.shapes) {
             shape.draw(this.graphics2DBufferedImage, this.eColorMode);
@@ -190,14 +191,14 @@ public class DrawingPanel extends JPanel implements Printable{
     private void finishTransforming(int x, int y) {
         this.graphics2DBufferedImage.setPaintMode();    // 그림을 그리는 모드
 
-        this.currentShape.setSelected(true);
+        System.out.println(this.selectedShape);
         this.transformer.finalize(x, y);
 
         if(this.selectedShape != null) {
             this.selectedShape.setSelected(false);
         }
 
-        if(!(this.currentShape instanceof TSelection)) {
+        if(this.selectedTool != ETools.eSelection) {
             // 그림 저장
             this.shapes.add(this.currentShape);
             this.selectedShape = this.currentShape;
@@ -205,7 +206,8 @@ public class DrawingPanel extends JPanel implements Printable{
             this.setUpdated(true);
         }
 
-        this.repaint();
+        this.currentShape.setSelected(true);
+        this.drawAll(this.getGraphics());
     }
 
     private TShape onShape(int x, int y) {
@@ -333,19 +335,37 @@ public class DrawingPanel extends JPanel implements Printable{
  	}
 
      public TShape undo() {
-         TShape removeShape = this.shapes.lastElement();
-         this.shapes.remove(removeShape);
+         int lastIndex = this.shapes.size() - 1;
+         TShape removeShape = this.shapes.remove(lastIndex);
+         System.out.println(this.selectedShape);
+         this.selectedShape.setSelected(false);
          this.selectedShape = null;
-         this.repaint();
+         this.drawAll(this.getGraphics());
          return removeShape;
      }
 
-     public void redo(TShape shape) {
+     public void redoPaste(TShape shape) {
          this.shapes.add(shape);
          this.selectedShape = shape;
-         this.repaint();
+         this.selectedShape.setSelected(true);
+         this.drawAll(this.getGraphics());
      }
-	
+
+     public TShape copy() {
+         TShape copyShape = this.selectedShape.clone();
+         copyShape.setGraphicsAttributes(this.selectedShape.getGraphicsAttributes());
+         copyShape.setAffineTransform(this.selectedShape.getAffineTransform());
+         return copyShape;
+     }
+
+     public TShape cut() {
+         TShape cutShape = this.selectedShape;
+         this.shapes.remove(cutShape);
+         this.selectedShape = null;
+         this.drawAll(this.getGraphics());
+         return cutShape;
+     }
+
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
         @Override
         public void mouseClicked(MouseEvent e) {

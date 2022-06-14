@@ -48,12 +48,20 @@ abstract public class TShape implements Serializable {
         return this.affineTransform;
     }
 
+    public void setAffineTransform(AffineTransform affineTransform) {
+        this.affineTransform = affineTransform;
+    }
+
     public TAnchors getAnchors() {
         return this.anchors;
     }
 
     public GraphicsAttributes getGraphicsAttributes() {
         return this.graphicsAttributes;
+    }
+
+    public void setGraphicsAttributes(GraphicsAttributes graphicsAttributes) {
+        this.graphicsAttributes = graphicsAttributes;
     }
 
     public double getCenterX() {

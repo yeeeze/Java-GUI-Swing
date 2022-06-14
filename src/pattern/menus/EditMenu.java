@@ -15,6 +15,7 @@ public class EditMenu extends JMenu {
 
     private DrawingPanel drawingPanel;
     private TShape removeShape;
+    private TShape copyShape;
 
     public EditMenu(String s) {
         super(s);
@@ -38,7 +39,19 @@ public class EditMenu extends JMenu {
     }
 
     public void redo() {
-        this.drawingPanel.redo(this.removeShape);
+        this.drawingPanel.redoPaste(this.removeShape);
+    }
+
+    public void copy() {
+        this.copyShape = this.drawingPanel.copy();
+    }
+
+    public void paste() {
+        this.drawingPanel.redoPaste(this.copyShape);
+    }
+
+    public void cut() {
+        this.copyShape = this.drawingPanel.cut();
     }
 
     class ActionHandler implements ActionListener {
@@ -48,6 +61,12 @@ public class EditMenu extends JMenu {
                 undo();
             } else if (e.getActionCommand().equals(EEditMenu.eRedo.name())) {
                 redo();
+            } else if (e.getActionCommand().equals(EEditMenu.eCopy.name())) {
+                copy();
+            } else if (e.getActionCommand().equals(EEditMenu.ePaste.name())) {
+                paste();
+            } else if (e.getActionCommand().equals(EEditMenu.eCut.name())) {
+                cut();
             }
         }
     }
