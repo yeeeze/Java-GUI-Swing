@@ -334,6 +334,12 @@ public class DrawingPanel extends JPanel implements Printable{
  			paint(graphics);
  			return PAGE_EXISTS;
  	}
+
+     public void undo() {
+         this.shapes.remove(this.shapes.lastElement());
+         this.selectedShape = null;
+         this.repaint();
+     }
 	
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
         @Override

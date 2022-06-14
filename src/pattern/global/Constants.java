@@ -63,6 +63,26 @@ public class Constants {
         }
     }
 
+    public enum EEditMenu {
+        eUndo("뒤로가기"),
+        eRedo("다시실행"),
+        eCut("잘라내기"),
+        eCopy("복사"),
+        ePaste("붙여넣기"),
+        eGroup("그룹화"),
+        eUnGroup("그룹해제");
+
+        private final String label;
+
+        EEditMenu(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
+
     public enum EGrapicsMenu {
         eLine("라인 두께"),
         eLineColor("라인 색"),

@@ -1,40 +1,48 @@
 package pattern.menus;
 
+import pattern.frames.DrawingPanel;
+import pattern.global.Constants;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import static pattern.global.Constants.*;
 
 public class EditMenu extends JMenu {
     private static final long serialVersionUTD = 1L;
 
-    private final JMenuItem undoItem;
-    private final JMenuItem redoItem;
-    private final JMenuItem cutItem;
-    private final JMenuItem copyItem;
-    private final JMenuItem pasteItem;
-    private final JMenuItem groupItem;
-    private final JMenuItem ungroupItem;
+    DrawingPanel drawingPanel;
 
     public EditMenu(String s) {
         super(s);
 
-        this.undoItem = new JMenuItem("undo");
-        this.add(this.undoItem);
+        ActionHandler actionHandler = new ActionHandler();
 
-        this.redoItem = new JMenuItem("redo");
-        this.add(this.redoItem);
-
-        this.cutItem = new JMenuItem("cut");
-        this.add(this.cutItem);
-
-        this.copyItem = new JMenuItem("copy");
-        this.add(this.copyItem);
-
-        this.pasteItem = new JMenuItem("paste");
-        this.add(this.pasteItem);
-
-        this.groupItem = new JMenuItem("group");
-        this.add(this.groupItem);
-
-        this.ungroupItem = new JMenuItem("ungroup");
-        this.add(this.ungroupItem);
+        for (EEditMenu eEditMenu : EEditMenu.values()) {
+            JMenuItem jMenuItem = new JMenuItem(eEditMenu.getLabel());
+            jMenuItem.addActionListener(actionHandler);
+            jMenuItem.setActionCommand(eEditMenu.name());
+            this.add(jMenuItem);
         }
     }
+
+    public void associate(DrawingPanel drawingPanel) {
+        this.drawingPanel = drawingPanel;
+    }
+
+    public void undo() {
+        this.drawingPanel.undo();
+    }
+
+    class ActionHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getActionCommand().equals(EEditMenu.eUndo.name())) {
+                undo();
+            }
+        }
+    }
+
+
+}
