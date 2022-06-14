@@ -17,7 +17,8 @@ public class Constants {
         eOval("동그라미", new TOval(), ETransformationStyle.e2PTransformation),
         eLine("선", new TLine(), ETransformationStyle.e2PTransformation),
         ePolygon("다각형", new TPolygon(), ETransformationStyle.eNPTransformation),
-        eColorMode("색상 모드", null, null);
+        eColorMode("색상 모드", null, null),
+        eAddPanel("패널 추가하기", null, null);
 
         private final String label;
         private final TShape tool;

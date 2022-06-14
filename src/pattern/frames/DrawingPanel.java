@@ -5,15 +5,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.Vector;
 
-import com.sun.java.accessibility.util.Translator;
-import pattern.colorChange.ColorChange;
-import pattern.global.Constants;
+import pattern.changeController.ColorChange;
 import pattern.global.Constants.ETools;
 import pattern.shapes.*;
 import pattern.transformer.*;

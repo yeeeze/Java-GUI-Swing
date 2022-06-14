@@ -13,6 +13,7 @@ public class ToolBar extends JToolBar {
 
     // components
     // associations
+    private PanelList panelList;
     private DrawingPanel drawingPanel;
 
     public ToolBar() {
@@ -33,10 +34,16 @@ public class ToolBar extends JToolBar {
             this.add(toolButton);
             buttonGroup.add(toolButton);
         }
+
+        JButton addButton = new JButton("패널 추가하기");
+        addButton.setActionCommand(ETools.eAddPanel.name());
+        addButton.addActionListener(actionHandler);
+        this.add(addButton);
     }
 
-    public void associate(DrawingPanel drawingPanel) {
+    public void associate(DrawingPanel drawingPanel, PanelList panelList) {
         this.drawingPanel = drawingPanel;
+        this.panelList = panelList;
         JButton defaultButton = (JButton) this.getComponent(ETools.eSelection.ordinal());
         defaultButton.doClick();
     }
@@ -48,8 +55,10 @@ public class ToolBar extends JToolBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand() == ETools.eColorMode.name()) {
+            if (e.getActionCommand().equals(ETools.eColorMode.name())) {
                 drawingPanel.changeColorMode();
+            } else if (e.getActionCommand().equals(ETools.eAddPanel.name())) {
+                panelList.addPanel();
             } else {
                 drawingPanel.setSelectedTool(ETools.valueOf(e.getActionCommand()));
             }

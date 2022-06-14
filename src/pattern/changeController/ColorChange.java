@@ -1,4 +1,4 @@
-package pattern.colorChange;
+package pattern.changeController;
 
 import pattern.shapes.GraphicsAttributes;
 import pattern.shapes.TAnchors;

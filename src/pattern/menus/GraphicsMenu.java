@@ -1,8 +1,6 @@
 package pattern.menus;
 
-import pattern.colorChange.ColorChange;
 import pattern.frames.DrawingPanel;
-import pattern.global.Constants;
 
 import javax.swing.*;
 
