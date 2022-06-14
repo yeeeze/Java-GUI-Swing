@@ -335,9 +335,17 @@ public class DrawingPanel extends JPanel implements Printable{
  			return PAGE_EXISTS;
  	}
 
-     public void undo() {
-         this.shapes.remove(this.shapes.lastElement());
+     public TShape undo() {
+         TShape removeShape = this.shapes.lastElement();
+         this.shapes.remove(removeShape);
          this.selectedShape = null;
+         this.repaint();
+         return removeShape;
+     }
+
+     public void redo(TShape shape) {
+         this.shapes.add(shape);
+         this.selectedShape = shape;
          this.repaint();
      }
 	

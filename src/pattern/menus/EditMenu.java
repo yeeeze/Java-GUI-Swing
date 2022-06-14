@@ -2,6 +2,7 @@ package pattern.menus;
 
 import pattern.frames.DrawingPanel;
 import pattern.global.Constants;
+import pattern.shapes.TShape;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +13,8 @@ import static pattern.global.Constants.*;
 public class EditMenu extends JMenu {
     private static final long serialVersionUTD = 1L;
 
-    DrawingPanel drawingPanel;
+    private DrawingPanel drawingPanel;
+    private TShape removeShape;
 
     public EditMenu(String s) {
         super(s);
@@ -32,7 +34,11 @@ public class EditMenu extends JMenu {
     }
 
     public void undo() {
-        this.drawingPanel.undo();
+        this.removeShape = this.drawingPanel.undo();
+    }
+
+    public void redo() {
+        this.drawingPanel.redo(this.removeShape);
     }
 
     class ActionHandler implements ActionListener {
@@ -40,6 +46,8 @@ public class EditMenu extends JMenu {
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals(EEditMenu.eUndo.name())) {
                 undo();
+            } else if (e.getActionCommand().equals(EEditMenu.eRedo.name())) {
+                redo();
             }
         }
     }
